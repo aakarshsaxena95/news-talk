@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+    title News Talk
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/style.css')
+    script(src='/js/jquery.min.js')
+    script(src='/js/angular.min.js')
+  body
+    .container
+      .heading
+        center
+          div
+            h1.header News Talk
+          .subheader
+            h5 A  platform  for  discussions  about  the  latest  and  trending  news.
+      .navigation
+        hr#top-line
+        ul.list-inline
+          li.navlinks Top Stories
+          li.navlinks Latest News
+          li.navlinks Tags
+          li.navlinks Reading List
+          li.navlinks.name Hi, {{user.name}}
+        hr#bottom-line
+      block contains
