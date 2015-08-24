@@ -22,6 +22,11 @@ router.get('/',function(req,res){
 	});
 });
 
+//Route to get top stories
+router.get('/top',function(req,res){
+  res.render('top');
+});
+
 //Route to register the user
 router.get('/register', function(req, res) {
     if(req.user){
@@ -60,10 +65,8 @@ router.get('/logout', function(req, res) {
 
 //Route to get an individual article
 router.get('/article/:id',function(req,res){
-  res.render('article.jade', {article:Article.findOne({_id:req.params.id})
-  .exec(function(err,art){
-    
-  })
+  res.render('article.jade', {
+    article:Article.findOne({_id:req.params.id})
 });
 });
 

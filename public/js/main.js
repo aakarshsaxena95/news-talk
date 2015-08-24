@@ -7,3 +7,10 @@ app.controller("articleCtrl",function($scope,$http){
 	    console.log(response);
 	  });
 });
+
+app.directive("singlearticle",function(){
+	return{
+		restrict:'E',
+		templateUrl:'views/one-article.html'
+	}
+})
