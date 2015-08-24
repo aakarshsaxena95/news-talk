@@ -7,27 +7,33 @@ html(ng-app='newstalk')
     script(src='/js/jquery.min.js')
     script(src='/js/angular.min.js')
     script(src='/js/main.js')
+    link(href='http://fonts.googleapis.com/css?family=Brawler' rel='stylesheet' type='text/css')
   body
     .container
       .heading
         center
           div
-            h1.header News Talk
+            h1.header 
+              a(href="/") News Talk
           .subheader
             h5 A  platform  for  discussions  about  the  latest  and  trending  news.
       .navigation
         hr#top-line
         ul.list-inline
-          li.navlinks Top Stories
-          li.navlinks Latest News
-          li.navlinks Tags
-          li.navlinks Reading List
+          li.navlinks 
+            a(href="/top") Top Stories
+          li.navlinks 
+            a(href="/") Latest News
+          li.navlinks
+            a(href="/tags") Tags
           if (!user)
             li.navlinks.name
               a(href="/login") Login
             li.navlinks.name
               a(href="/register") Register  
           if (user)
+            li.navlinks
+              a(href="/readinglist") Reading List
             li.navlinks.name
               a(href="/logout") Logout
             li.navlinks.name

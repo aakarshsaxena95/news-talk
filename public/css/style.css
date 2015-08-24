@@ -10,6 +10,10 @@ body{
 	letter-spacing:10px;
 	font-size:5em;
 }
+.header a{
+	color: #000000;
+	text-decoration:none;
+}
 .subheader{
 	opacity:.75;
 	font-variant: small-caps;
@@ -19,7 +23,14 @@ body{
 	margin:5px 10px 0px 10px;
 	font-variant: small-caps;
 	letter-spacing:2px;
+	font-size:1.4em;
 }
+
+.navlinks a{
+	color: #000000;
+	text-decoration:none;
+}
+
 hr{
 	margin:0;
 	border:0;
@@ -34,6 +45,8 @@ hr{
 }
 .imgWrapper{
 	display:flex;
+	padding-top:15px;
+	padding-bottom:15px;
 }
 .articleImage{
 	padding:10px;
@@ -50,11 +63,10 @@ hr{
 .articleAbstract{
 	font-size:1.2em;
 	font-family:Verdana;
-
 }
 
 .articleTitle{
-	
+	font-family: 'Brawler', serif;
 }
 
 .articleWrapper{
@@ -64,6 +76,29 @@ hr{
 	border-radius:2px;
 	padding:20px;
 }
+
+.up{
+	padding: 1px 10px;
+	font-size:1.5em;
+	opacity: .5;
+}
+
+.down{
+	padding: 1px 10px;
+	font-size:1.5em;
+	opacity: .5;
+}
+.commentLink{
+	padding: 1px 10px;
+	font-size:1.5em;
+	opacity: .5;
+}
+.readingListLink{
+	padding: 1px 10px;
+	font-size:1.5em;
+	opacity: .5;
+}
+
 
 /*For line on both sides*/
 h3{

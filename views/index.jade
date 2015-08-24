@@ -13,8 +13,22 @@ block contains
 						.col-md-4.articleCaption 
 							p {{article.images[2].caption}}
 					p.articleAbstract {{article.abstract}} 
-						a(href="{{article.url}}") Read full story.
+						a(href="{{article.url}}") Read full story. 
 					p.small
 						{{article.timestamp.substring(11,16)}}AM 
-						span(style="float:right"){{article.timestamp.substring(0,10).split('-').reverse().join('/')}}
-					
+						span(style="float:right"){{article.timestamp.substring(0,10).split('-').reverse().join('/')}} 
+					br 
+					.buttonsContainer 
+						span.up 
+							img(src="/img/up.png" width="20px") 
+							&nbsp;&nbsp;&nbsp;{{article.votes.up.length}} 
+						span.down 
+							img(src="/img/down.png" width="20px") 
+							&nbsp;&nbsp;&nbsp;{{article.votes.down.length}} 
+						span.commentLink 
+							img(src="/img/comment.png" width="20px") 
+							&nbsp;&nbsp;&nbsp;Comment 
+						span.readingListLink 
+							img(src="/img/plus.png" width="20px") 
+							&nbsp;&nbsp;&nbsp;Add to Reading List 
+							
