@@ -32,6 +32,38 @@ hr{
 .navigation{
 	padding:20px 0px;
 }
+.imgWrapper{
+	display:flex;
+}
+.articleImage{
+	padding:10px;
+}
+.articleCaption{
+	height:100%;
+	margin-top:auto;
+	margin-bottom:auto;
+	color:rgba(0,0,0,.7);
+	font-family:helvetica;
+	font-size:.8em;
+}
+
+.articleAbstract{
+	font-size:1.2em;
+	font-family:Verdana;
+
+}
+
+.articleTitle{
+	
+}
+
+.articleWrapper{
+	/*box-shadow: 0px 2px 2px -1px;*/
+	box-shadow: 2px 2px 31px 3px rgba(0,0,34,0.2);
+	margin:10px;
+	border-radius:2px;
+	padding:20px;
+}
 
 /*For line on both sides*/
 h3{
@@ -59,3 +91,4 @@ h3:before {
 h3:before {
   left: 0;
 }
+

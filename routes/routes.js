@@ -60,11 +60,15 @@ router.get('/ping', function(req, res){
     res.status(200).send("pong!");
 });
 
-router.get('/api/articles/:reqd',function(req,res){
-  var x = {}
-  Article.find({},function(err,ress){
-    res.json(ress);
-  }).limit(10);
+router.get('/api/articles/:page',function(req,res){
+  var x = {};
+  Article.find({})
+         .limit(10)
+         .skip(req.params.page*10)
+         .sort({timestamp:-1})
+         .exec(function(err,arts){
+            res.json(arts);
+         });
 });
 
 module.exports = router;

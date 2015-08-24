@@ -2,10 +2,19 @@ extends layout
 
 block contains
 	div(ng-controller="articleCtrl")
-		div.col-md-4(ng-repeat="article in articles")
-			h3.small {{article.section}}
-			h2 {{article.title}}
-			p {{article.abstract}}
-				a(href="{{article.url}}") Read full story.
-			input.form-control.col-md-7(type="text",placeholder="enter comment")
-			button.btn.col-md-5 Submit
+			div(ng-repeat="article in articles").row
+				div.col-md-8.articleWrapper
+					center
+						h5 {{article.section}}
+					h2.articleTitle {{article.title}}
+					.row.imgWrapper(ng-show="{{article.images[2].url}}")
+						.col-md-8.articleImage
+							img(src = "{{article.images[2].url}}", width = "100%")
+						.col-md-4.articleCaption 
+							p {{article.images[2].caption}}
+					p.articleAbstract {{article.abstract}} 
+						a(href="{{article.url}}") Read full story.
+					p.small
+						{{article.timestamp.substring(11,16)}}AM 
+						span(style="float:right"){{article.timestamp.substring(0,10).split('-').reverse().join('/')}}
+					
