@@ -32,3 +32,30 @@ hr{
 .navigation{
 	padding:20px 0px;
 }
+
+/*For line on both sides*/
+h3{
+  position: relative;
+  text-align: center;
+}
+
+h3 span {
+  background: #fff;
+  padding: 0 15px;
+  position: relative;
+  z-index: 1;
+}
+
+h3:before {
+  background: #ddd;
+  content: "";
+  display: block;
+  height: 1px;
+  position: absolute;
+    top: 50%;
+  width: 100%;
+}
+
+h3:before {
+  left: 0;
+}

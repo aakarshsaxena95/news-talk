@@ -26,6 +26,9 @@ router.get('/home', isAuthenticated, function(req, res){
  
 
 router.get('/register', function(req, res) {
+    if(req.user){
+      res.redirect('/');
+    }
     res.render('register', { });
 });
 
@@ -36,6 +39,9 @@ router.post('/register', passport.authenticate('signup',{
 
 
 router.get('/login', function(req, res) {
+    if(req.user){
+      res.redirect('/');
+    }
     res.render('login', { user : req.user });
 });
 
@@ -52,6 +58,13 @@ router.get('/logout', function(req, res) {
 
 router.get('/ping', function(req, res){
     res.status(200).send("pong!");
+});
+
+router.get('/api/articles/:reqd',function(req,res){
+  var x = {}
+  Article.find({},function(err,ress){
+    res.json(ress);
+  }).limit(10);
 });
 
 module.exports = router;

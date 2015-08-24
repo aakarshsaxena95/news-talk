@@ -65,7 +65,7 @@ module.exports = function(passport) {
     passport.use('signup', new LocalStrategy({passReqToCallback : true},function(req, name, password, done) {
         findOrCreateUser = function(){
           // find a user in Mongo with provided email
-          console.log(email);
+          
 
           User.findOne({'email':req.body.email},function(err, user) {
             // In case of any error return

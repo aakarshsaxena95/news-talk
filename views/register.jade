@@ -1,14 +1,21 @@
 extends layout
 block contains
 	.other-header
-		h1 Login
+		h1 Register
 		br
 		center
 			form(role='form', action="/register",method="post", style='max-width: 300px;')
 				.form-group
-					input.form-control(type='text', name="username", placeholder='Enter Username')
+					input.form-control(type='text', name="username", placeholder='Enter your full name' required)
 				.form-group
-					input.form-control(type='email', name="email", placeholder='Enter Email ID')
+					input.form-control(type='email', name="email", placeholder='Enter your email address' required)
 				.form-group
-					input.form-control(type='password', name="password", placeholder='Password')
+					input.form-control(type='password', name="password", placeholder='Enter a new password' required)
 				button.btn.btn-default.btn-large(type='submit') Submit
+			br
+			.col-md-4
+			.col-md-4
+				h3
+					span OR
+				
+			.col-md-4
