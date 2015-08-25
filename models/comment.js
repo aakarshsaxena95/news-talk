@@ -5,6 +5,7 @@ var ObjectID = mongoose.Schema.Types.ObjectId;
 
 var commentsSchema = new mongoose.Schema({
 	content: String,
+	user: String,
 	votes:{
 		up:[ObjectID],
 		down:[ObjectID]

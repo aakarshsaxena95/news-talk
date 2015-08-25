@@ -1,15 +1,20 @@
-<div class="col-md-8 articleWrapper">
+<div class="col-md-6 articleWrapper">
   <center>
     <h5>{{article.section}}</h5>
   </center>
   <h2 class="articleTitle">{{article.title}}</h2>
-  <div ng-show="{{article.images[2].url}}" class="row imgWrapper">
+  <!-- <div ng-show="{{article.images[2].url}}" class="row imgWrapper">
     <div class="col-md-8 articleImage"><img src="{{article.images[2].url}}" width="100%"/></div>
     <div class="col-md-4 articleCaption">
       <p>{{article.images[2].caption}}</p>
     </div>
   </div>
+ -->
   <p class="articleAbstract">{{article.abstract}} <a href="{{article.url}}">Read full story. </a></p>
   <p class="small">{{article.timestamp.substring(11,16)}}AM <span style="float:right">{{article.timestamp.substring(0,10).split('-').reverse().join('/')}} </span></p><br/>
   <div class="buttonsContainer"> <span class="up"> <img src="/img/up.png" width="20px"/>&nbsp;&nbsp;&nbsp;{{article.votes.up.length}} </span><span class="down"> <img src="/img/down.png" width="20px"/>&nbsp;&nbsp;&nbsp;{{article.votes.down.length}} </span><span class="commentLink"> <img src="/img/comment.png" width="20px"/>&nbsp;&nbsp;&nbsp;Comment </span><span class="readingListLink"> <img src="/img/plus.png" width="20px"/>&nbsp;&nbsp;&nbsp;Add to Reading List </span></div>
+  <form ng-submit="commentForm()">
+    <input type="text" name="content" ng-model="commentBody.content">
+    <button type="submit">Submit</button>
+  </form>
 </div>
