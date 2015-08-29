@@ -1,17 +1,17 @@
 extends layout
 
 block contains
-	div(ng-controller="articleCtrl")
+	div(ng-controller="ArticleController")
 			div(ng-repeat="article in articles").row
 				.col-md-6.articleWrapper(ng-init = 'id = article._id')
 					center
 						h5 {{article.section}}
 					h2.articleTitle {{article.title}}
-					//- .row.imgWrapper(ng-show='{{article.images[2].url}}')
-					//- 	.col-md-8.articleImage
-					//- 		img(src='{{article.images[2].url}}', width='100%')
-					//- 	.col-md-4.articleCaption
-					//- 		p {{article.images[2].caption}}
+					.row.imgWrapper(ng-show='{{article.images[2].url}}')
+						.col-md-8.articleImage
+							img(src='{{article.images[2].url}}', width='100%')
+						.col-md-4.articleCaption
+							p {{article.images[2].caption}}
 					p.articleAbstract {{article.abstract}} 
 						a(href='{{article.url}}') Read full story. 
 					p.small {{article.timestamp.substring(11,16)}}AM 
