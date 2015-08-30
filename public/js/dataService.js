@@ -5,23 +5,51 @@
 	
 	function dataService($http,$q){
 		return {
-			getArticles : getArticles
-			// getComments : getComments
+			getArticles : getArticles,
+			postComments : postComments,
+			addToReadingList : addToReadingList,
+			getReadingList : getReadingList
 		};
 
-		function getArticles(){
-			console.log("yolo");
+		function getArticles(numsRecieved){
+			//console.log(numsRecieved);
 			return $http({
 				method:'get',
-				url:'/api/articles/0'
+				url:'/api/articles/'+parseInt(numsRecieved/10)
 			})
 			.then(sendResponse);
 		}
 
 		function sendResponse(response){
-			console.log(response.data);
-			return response.data;
+				return response.data;
 		}
-	}
 
+		function postComments(id,userid,contents){
+			console.log(userid);
+			var uid = userid;
+			var c =  contents;
+			var data = {
+				content: c,
+				user: uid
+			};
+			console.log(data);
+			$http.post('/api/article/'+id,data);
+		}
+		function addToReadingList(id,userid){
+			var data = {
+				id: id,
+				user: userid
+			};
+			$http.post('/api/user/'+userid,data);	
+		}
+		function getReadingList(userid){
+			console.log('/api/readinglist/0');
+			return $http({
+				method:'get',
+				url:'/api/readinglist/0'
+			})
+			.then(sendResponse);
+		}			
+		
+	}
 })()

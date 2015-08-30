@@ -12,6 +12,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var multer = require('multer'); 
+var toastr = require('express-toastr');
 
 //Passport requires
 var passport = require('passport');
@@ -51,7 +52,7 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(toastr());
 
 
 
@@ -85,42 +86,42 @@ app.use(express.static(path.join(__dirname, 'public')));
   getJsonFromJsonP(url, function (err, data) {
   	if(data){
 	    data.results.forEach(function(article){
-	      Article.findOne({timestamp:article.created_date},function(err,found){
+	      Article.findOne({title:article.title},function(err,found){
 	        if (err){
 	          console.log('Error in finding article: '+err);
 	          return done(err);
 	        }
 	        if (found) {
+	        	console.log("exists");
 	        } 
 	        else{
-	          var newArticle = new Article();
-	          newArticle.section = article.section;
-	          newArticle.title = article.title;
-	          newArticle.abstract = article.abstract;
-	          newArticle.url = article.url.replace('\\','');
-	          newArticle.images = [];
-	          if(article.multimedia){
-		          article.multimedia.forEach(function(image){
-		          	console.log(image);
-		            newArticle.images.push({
-		              url: image.url,
-		              caption: image.caption,
-		              width: image.width
-		            });
-		          });
-	      	  }
-	          newArticle.votes = {up:[],down:[]};
-	          newArticle.comments = [];
-	          newArticle.timestamp = article.created_date;
-	          newArticle.save(function(err) {
-	            console.log("in save");
-	            if (err){
-	              console.log('Error in Saving article: '+err);  
-	              throw err;  
-	            }
-	            //console.log("Created new Article "+newArticle);    
-	          });
-	        }});
+		          var newArticle = new Article();
+		          newArticle.section = article.section;
+		          newArticle.title = article.title;
+		          newArticle.abstract = article.abstract;
+		          newArticle.url = article.url.replace('\\','');
+		          newArticle.images = [];
+		          if(article.multimedia){
+			          article.multimedia.forEach(function(image){
+			            newArticle.images.push({
+			              url: image.url,
+			              caption: image.caption,
+			              width: image.width
+			            });
+			          });
+		      	  }
+		          newArticle.votes = {up:[],down:[]};
+		          newArticle.comments = [];
+		          newArticle.timestamp = article.created_date;
+		          newArticle.save(function(err) {
+		            console.log("in save");
+		            if (err){
+		              console.log('Error in Saving article: '+err);  
+		              throw err;  
+		            }
+	          	  });
+	        }
+	    });
 		});
 	}
 });

@@ -1,24 +1,33 @@
-var app = angular.module('newstalk',[]);
+var app = angular.module('newstalk',['infinite-scroll']);
 
 
 app.controller("ArticleController",['$scope','$http','dataService',function($scope,$http,dataService){
-
-	dataService.getArticles()
-		.then(getArticlesSuccess);
+	$scope.articles = {articles:[]};
+	$scope.reachedEnd = false;
+	$scope.getArticles = function(){
+		console.log($scope.reachedEnd)
+		if(!$scope.reachedEnd)
+		dataService.getArticles($scope.articles.articles.length)
+			.then(getArticlesSuccess);
+		};
 
 	function getArticlesSuccess(articles){
-		$scope.articles = articles;
+		articles.articles.forEach(function(article){
+			$scope.articles.articles.push(article);
+		});
+		$scope.reachedEnd = articles.reachedEnd;
+		console.log($scope.reachedEnd+"in getArticlesSuccess");
 	}
-	console.log($scope.articles);
-	$scope.commentForm = function(id,userid){
-		console.log(userid);
-		var uid = userid;
-		var c =  this.contents;
-		var data = {
-			content: c,
-			user: uid
-		};
-		console.log(data);
-		$http.post('/api/article/'+id,data);
+
+	$scope.addToReadingList = function(id,userid){
+		console.log("Clicked on add to reading list");
+		dataService.addToReadingList(id,userid);
 	};
+
+	$scope.commentForm = function(id,userid,contents) {
+		dataService.postComments(id,userid,contents);
+		console.info(contents);
+	}	
 }]);
+
+

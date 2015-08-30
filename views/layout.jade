@@ -8,6 +8,9 @@ html(ng-app='newstalk')
     script(src='/js/angular.min.js')
     script(src='/js/main.js')
     script(src='/js/dataService.js')
+    script(src='/js/controllers/readinglistctrl.js')
+    script(src='/js/ng-infinite-scroll.min.js')
+
     link(href='http://fonts.googleapis.com/css?family=Brawler' rel='stylesheet' type='text/css')
   body
     .container
@@ -42,15 +45,16 @@ html(ng-app='newstalk')
             
         hr#bottom-line
       block contains
-      #footer
-        .col-md-4
-          img(src="logo" width="100px")
-        .col-md-4
-          ul.list
+      #footer.row
+        .col-md-4.leftborder
+          h2#footer-heading News Talk
+        .col-md-4.leftborder
+          ul.list.list-unstyled
             li
-              a() about us
-        .col-md-4
-          ul.list
+              a() Contact Us
+
+        .col-md-4.leftborder
+          ul.list.list-unstyled
             li
               a() about us
             li

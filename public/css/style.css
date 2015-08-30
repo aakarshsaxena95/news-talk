@@ -10,6 +10,12 @@ body{
 	letter-spacing:10px;
 	font-size:5em;
 }
+#footer-heading{
+	text-transform: capitalize;
+	font-variant: small-caps;
+	letter-spacing:4px;
+	font-size:3em;
+}
 .header a{
 	color: #000000;
 	text-decoration:none;
@@ -97,6 +103,11 @@ hr{
 	padding: 1px 10px;
 	font-size:1.5em;
 	opacity: .5;
+}
+
+.leftborder{
+	padding:15px;
+	float:middle;
 }
 
 #footer{

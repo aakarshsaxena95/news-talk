@@ -2,6 +2,7 @@ var express = require('express');
 var passport = require('passport');
 var router = express.Router();
 var mongoose = require('mongoose');
+var q = require('q');
 
 //Schemas
 var Article = require('../models/article.js');
@@ -33,8 +34,13 @@ router.get('/top',function(req,res){
 });
 
 //Route to get reading list
-router.get('/readinglist',function(req,res){
-  res.render('readinglist');
+router.get('/readinglist/',function(req,res){
+  if(!req.user){
+   res.redirect('/login'); 
+  }
+  res.render('readinglist',{
+    user:req.user
+  });
 });
 
 //Route to register the user
@@ -88,14 +94,34 @@ router.post('/login', passport.authenticate('login', {
 
 //Request to get the articles in groups of 10 starting from the latest determined by the page variable (0 for the first batch)
 router.get('/api/articles/:page',function(req,res){
-  var x = {};
+  var articleObj = {};
   Article.find({})
          .limit(10)
          .skip(req.params.page*10)
          .sort({timestamp:-1})
          .exec(function(err,arts){
-            res.json(arts);
+          articleObj.articles = arts;
+            if (arts.length<10){
+              articleObj.reachedEnd = true;
+            }
+            setTimeout(function() {res.json(articleObj);}, 1500);
          });
+});
+
+router.get('/api/readinglist/:page',function(req,res){
+  articleArr ={articles:[]};
+  console.log("recieved"+req.user.readingList);
+  req.user.readingList.forEach(function(articleID){
+    Article.findOne({_id:articleID})
+    .exec(function(err,art){
+      articleArr.articles.push(art);
+      if(articleArr.articles.length===req.user.readingList.length){
+        
+    console.log(articleArr);
+    res.json(articleArr);   
+      }
+   });
+  });
 });
 
 //Request to get an article JSON by its ID
@@ -136,7 +162,18 @@ router.post('/api/article/:id',function(req,res){
     }
     else{
       console.log("Yay");
+      res.send();
     }
+  });
+});
+
+router.post('/api/user/:uid',function(req,res){
+  console.log(req.body);
+  User.update({
+    _id:req.body.user
+  },
+  {$addToSet:{readingList:req.body.id}},null,function(err,numAffected){
+    console.log(numAffected);
   });
 });
 
