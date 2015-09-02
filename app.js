@@ -102,13 +102,10 @@ app.use(toastr());
 		          newArticle.url = article.url.replace('\\','');
 		          newArticle.images = [];
 		          if(article.multimedia){
-			          article.multimedia.forEach(function(image){
-			            newArticle.images.push({
-			              url: image.url,
-			              caption: image.caption,
-			              width: image.width
-			            });
-			          });
+		          	var image = article.multimedia[article.multimedia.length-1]
+		          	console.log(image);
+		            newArticle.image.url = image.url;
+		            newArticle.image.caption = image.caption;
 		      	  }
 		          newArticle.votes = {up:[],down:[]};
 		          newArticle.comments = [];
@@ -140,6 +137,6 @@ var routes = require('./routes/routes.js');
 var users = require('./routes/users');
 app.use('/',routes);
 
-app.listen(3000,function(){
+app.listen(8000,function(){
 	console.log("Running the server on port "+3000);
 });

@@ -3,6 +3,7 @@ var passport = require('passport');
 var router = express.Router();
 var mongoose = require('mongoose');
 var q = require('q');
+var ObjectID = require('mongoose').Schema.ObjectId;
 
 //Schemas
 var Article = require('../models/article.js');
@@ -104,10 +105,11 @@ router.get('/api/articles/:page',function(req,res){
             if (arts.length<10){
               articleObj.reachedEnd = true;
             }
-            setTimeout(function() {res.json(articleObj);}, 1500);
+            res.json(articleObj);
          });
 });
 
+//Fetch data for reading list
 router.get('/api/readinglist/:page',function(req,res){
   articleArr ={articles:[]};
   console.log("recieved"+req.user.readingList);
@@ -147,6 +149,7 @@ router.get('/api/article/comments/:id',function(req,res){
   res.json(commentsArr);
 });
 
+//Comment Addition
 router.post('/api/article/:id',function(req,res){
   var newComment = new Comment();
   newComment.content = req.body.content;
@@ -156,6 +159,11 @@ router.post('/api/article/:id',function(req,res){
   newComment.comments = [];
   newComment.timestamp = Date.now();
   console.log(newComment);
+  Article.findByIdAndUpdate(req.params.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
+    console.log(err,numAffected);
+  });
+  newComment.article=req.params.id;
+  console.log(req.params.id);
   newComment.save(function(err,comment){
     if(err){
       console.log(err);
@@ -167,6 +175,7 @@ router.post('/api/article/:id',function(req,res){
   });
 });
 
+//Addition to reading List
 router.post('/api/user/:uid',function(req,res){
   console.log(req.body);
   User.update({
@@ -175,6 +184,14 @@ router.post('/api/user/:uid',function(req,res){
   {$addToSet:{readingList:req.body.id}},null,function(err,numAffected){
     console.log(numAffected);
   });
+});
+
+
+
+//VOTING
+//Upvotes
+router.post('/api/article/up/:id',function(req,res){
+  
 });
 
 module.exports = router;

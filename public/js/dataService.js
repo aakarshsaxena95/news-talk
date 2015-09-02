@@ -12,7 +12,6 @@
 		};
 
 		function getArticles(numsRecieved){
-			//console.log(numsRecieved);
 			return $http({
 				method:'get',
 				url:'/api/articles/'+parseInt(numsRecieved/10)

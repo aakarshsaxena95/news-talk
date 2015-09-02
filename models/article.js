@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var passportLocalMongoose = require('passport-local-mongoose');
 
-var ObjectID = mongoose.Schema.Types.ObjectId;
+var ObjectID = require('mongoose').Schema.ObjectId;
 
 
 var articleSchema = new mongoose.Schema({
@@ -9,10 +9,10 @@ var articleSchema = new mongoose.Schema({
 	title: String,
 	abstract: String,
 	url: String,
-	images: [{
+	image: {
 		url: String,
 		caption: String
-	}],
+	},
 	votes:{
 		up: [ObjectID],
 		down: [ObjectID]

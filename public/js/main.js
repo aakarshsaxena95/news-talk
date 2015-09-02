@@ -1,7 +1,7 @@
 var app = angular.module('newstalk',['infinite-scroll']);
 
-
 app.controller("ArticleController",['$scope','$http','dataService',function($scope,$http,dataService){
+
 	$scope.articles = {articles:[]};
 	$scope.reachedEnd = false;
 	$scope.getArticles = function(){
@@ -27,7 +27,6 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 	$scope.commentForm = function(id,userid,contents) {
 		dataService.postComments(id,userid,contents);
 		console.info(contents);
-	}	
+	}
+		
 }]);
-
-
