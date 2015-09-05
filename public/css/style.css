@@ -37,6 +37,25 @@ body{
 	text-decoration:none;
 }
 
+.profilepicture{
+	border-radius:100px;
+	border:solid 1px black;
+	float:left;
+	margin-right:15px;
+}
+
+.eachcomment{
+	padding:10px;
+	background-color:#eeeeee;
+	margin:1px;
+}
+
+.commentusername{
+	color:#000066;
+	font-family:Brawler;
+	font-size:1.15em;
+}
+
 hr{
 	margin:0;
 	border:0;
@@ -45,6 +64,22 @@ hr{
 #bottom-line{
 	color:black;
 	border-top:1px solid rgba(1,1,1,.25);
+}
+.submitbtn{
+	background-color:#fff;
+	border-radius:5px;
+	border:solid 1px #cccccc;
+	padding:6px 20px;
+	transition:background .5s ease;
+	transition:border .5s ease;
+}
+.commentform{
+	font-size:1.1em;
+	resize:none;
+}
+.submitbtn:hover{
+	background-color:#eee;
+	border:solid 1px black;
 }
 .navigation{
 	padding:20px 0px;
@@ -64,6 +99,9 @@ hr{
 	color:rgba(0,0,0,.7);
 	font-family:helvetica;
 	font-size:.8em;
+}
+.buttonscontainer{
+	padding:12px;
 }
 
 .articleAbstract{
@@ -87,22 +125,26 @@ hr{
 	padding: 1px 10px;
 	font-size:1.5em;
 	opacity: .5;
+	cursor:pointer;
 }
 
 .down{
 	padding: 1px 10px;
 	font-size:1.5em;
 	opacity: .5;
+	cursor:pointer;
 }
 .commentLink{
 	padding: 1px 10px;
 	font-size:1.5em;
 	opacity: .5;
+	cursor:pointer;
 }
 .readingListLink{
 	padding: 1px 10px;
 	font-size:1.5em;
 	opacity: .5;
+	cursor:pointer;
 }
 
 .leftborder{

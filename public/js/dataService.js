@@ -8,7 +8,9 @@
 			getArticles : getArticles,
 			postComments : postComments,
 			addToReadingList : addToReadingList,
-			getReadingList : getReadingList
+			getReadingList : getReadingList,
+			upvote:upvote,
+			getComments : getComments
 		};
 
 		function getArticles(numsRecieved){
@@ -23,13 +25,18 @@
 				return response.data;
 		}
 
-		function postComments(id,userid,contents){
-			console.log(userid);
-			var uid = userid;
+		function sendResponseComments(response){
+				return response.data;
+		}
+
+		function postComments(id,user,contents){
+			var uid = user._id;
+			var uname=user.name;
 			var c =  contents;
 			var data = {
 				content: c,
-				user: uid
+				id: uid,
+				name:uname
 			};
 			console.log(data);
 			$http.post('/api/article/'+id,data);
@@ -49,6 +56,19 @@
 			})
 			.then(sendResponse);
 		}			
+		function upvote(id){
+			return $http({
+				method:'post',
+				url:'/api/article/up/'+id
+			});
+		}
+		function getComments(id){
+			return $http({
+				method:'get',
+				url:'/api/article/comments/'+id
+			})
+			.then(sendResponseComments);
+		}
 		
 	}
 })()

@@ -3,7 +3,7 @@ extends layout
 block contains
 		div(ng-controller="ArticleController")
 			div(infinite-scroll='getArticles()' infinite-scroll-disabled='reachedEnd' infinite-scroll-distance='1')
-				div(ng-repeat="article in articles.articles").row
+				div(ng-repeat="article in articles.articles track by $index").row
 					.col-md-6.articleWrapper(ng-init = 'id = article._id')
 						center
 							h5 {{article.section}} {{reachedEnd}}
@@ -18,23 +18,25 @@ block contains
 						p.small {{article.timestamp.substring(11,16)}}AM 
 							span(style='float:right') {{article.timestamp.substring(0,10).split('-').reverse().join('/')}} 
 						br
-						.buttonsContainer
-							span.up(ng-click='upvote(id)')
-								img(src='/img/up.png', width='20px')
-								|    {{article.votes.up.length}}
-							span.down(ng-click='downvote(id)')
-								img(src='/img/down.png', width='20px')
-								|    {{article.votes.down.length}}
-							span.commentLink(ng-click='showComments(id)')
-								img(src='/img/comment.png', width='20px')
-								|    Comment
-							if(user)
-								a 
-									span.readingListLink(ng-init='userid = #{JSON.stringify(user._id)}' ng-click="addToReadingList(id,userid)")
-										img(src='/img/plus.png', width='20px')
-										|    Add to Reading List
 						if(user)
-							.commentsContainer(ng-init='userid = #{JSON.stringify(user._id)}')
-								form(ng-submit='commentForm(id,userid,contents)')
-									input(type='text', name='contents', ng-model='contents')
-									button(type='submit') Submit
+							.buttonsContainer
+								span.up(ng-click='upvote(id)')
+									img(src='/img/up.png', width='20px')
+									|    {{article.votes.up.length}}
+								span.down(ng-click='downvote(id)')
+									img(src='/img/down.png', width='20px')
+									|    {{article.votes.down.length}}
+								span.commentLink(ng-click='showComments(id)')
+									img(src='/img/comment.png', width='20px')
+									|    Comment
+								span.readingListLink(ng-init='userid = #{JSON.stringify(user._id)}' ng-click="addToReadingList(id,userid)")
+									img(src='/img/plus.png', width='20px')
+									|    Add to Reading List
+							.commentsContainer(id="{{id}}")
+								.eachcomment(ng-repeat="comment in comments | filterId:id")
+									img.profilepicture(src="http://lorempixel.com/output/people-q-c-100-100-9.jpg" width=50)
+									h5.commentusername {{comment.user.name}}
+									p {{comment.content}}
+								form(ng-init='user = #{JSON.stringify(user)}' ng-submit='commentForm(id,user,contents)')
+									textarea(name='contents', ng-model='contents', class="form-control commentform", cols='6')
+									button(type='submit' class="submitbtn") Submit

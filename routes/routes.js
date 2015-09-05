@@ -139,21 +139,26 @@ router.get('/api/article/comments/:id',function(req,res){
   commentsArr = {comments:[]};
   Article.findOne({_id:req.params.id})
   .exec(function(err,art){
+    console.log(art);
     art.comments.forEach(function(commentID){
       Comment.findOne({_id:commentID})
         .exec(function(err,comm){
-          commentsArr.comments.extend(comm);
+          console.log(comm);
+          commentsArr.comments.push(comm);
+          if(commentsArr.comments.length === art.comments.length){
+            res.json(commentsArr);
+          }
       });
     });
   });
-  res.json(commentsArr);
 });
 
 //Comment Addition
 router.post('/api/article/:id',function(req,res){
   var newComment = new Comment();
   newComment.content = req.body.content;
-  newComment.user = req.body.user;
+  newComment.user.id = req.body.id;
+  newComment.user.name = req.body.name;
   newComment.votes.up = [];
   newComment.votes.down = [];
   newComment.comments = [];
@@ -191,7 +196,9 @@ router.post('/api/user/:uid',function(req,res){
 //VOTING
 //Upvotes
 router.post('/api/article/up/:id',function(req,res){
-  
+  console.log(mongoose.Schema.ObjectId(req.user.id));
+  Article.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
+  res.send('Updated');  
 });
 
 module.exports = router;

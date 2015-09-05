@@ -5,7 +5,10 @@ var ObjectID = require('mongoose').Schema.ObjectId;
 
 var commentsSchema = new mongoose.Schema({
 	content: String,
-	user: String,
+	user: {
+		name:String,
+		id:String
+	},
 	article: String,
 	votes:{
 		up:[ObjectID],
