@@ -112,15 +112,12 @@ router.get('/api/articles/:page',function(req,res){
 //Fetch data for reading list
 router.get('/api/readinglist/:page',function(req,res){
   articleArr ={articles:[]};
-  console.log("recieved"+req.user.readingList);
   req.user.readingList.forEach(function(articleID){
     Article.findOne({_id:articleID})
     .exec(function(err,art){
       articleArr.articles.push(art);
       if(articleArr.articles.length===req.user.readingList.length){
-        
-    console.log(articleArr);
-    res.json(articleArr);   
+        res.json(articleArr);   
       }
    });
   });
@@ -139,11 +136,9 @@ router.get('/api/article/comments/:id',function(req,res){
   commentsArr = {comments:[]};
   Article.findOne({_id:req.params.id})
   .exec(function(err,art){
-    console.log(art);
     art.comments.forEach(function(commentID){
       Comment.findOne({_id:commentID})
         .exec(function(err,comm){
-          console.log(comm);
           commentsArr.comments.push(comm);
           if(commentsArr.comments.length === art.comments.length){
             res.json(commentsArr);
@@ -163,12 +158,10 @@ router.post('/api/article/:id',function(req,res){
   newComment.votes.down = [];
   newComment.comments = [];
   newComment.timestamp = Date.now();
-  console.log(newComment);
   Article.findByIdAndUpdate(req.params.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
     console.log(err,numAffected);
   });
   newComment.article=req.params.id;
-  console.log(req.params.id);
   newComment.save(function(err,comment){
     if(err){
       console.log(err);
@@ -181,7 +174,7 @@ router.post('/api/article/:id',function(req,res){
 });
 
 //Addition to reading List
-router.post('/api/user/:uid',function(req,res){
+router.post('/api/user/add/:uid',function(req,res){
   console.log(req.body);
   User.update({
     _id:req.body.user
@@ -191,6 +184,16 @@ router.post('/api/user/:uid',function(req,res){
   });
 });
 
+//Removal from reading list
+router.post('/api/user/rem/:uid',function(req,res){
+  console.log(req.body.id);
+  User.update({
+    _id:req.user._id
+  },
+  {$pull:{readingList:req.body.id}},null,function(err,numAffected){
+    console.log(numAffected);
+  });
+});
 
 
 //VOTING

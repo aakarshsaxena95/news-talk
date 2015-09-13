@@ -24,8 +24,23 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 		console.log("Clicked on add to reading list");
 		dataService.addToReadingList(id,userid);
 	};
+
+	$scope.removeFromReadingList = function(id,userid){
+		dataService.removeFromReadingList(id,userid);
+	}
+
 	$scope.upvote = function(id){
+		upvoteIncrementer(id);
 		dataService.upvote(id);
+	}
+
+	var upvoteIncrementer = function(id){
+		$scope.articles.forEach(function(article){
+			if(article && article._id === id && !$scope.article.votes.set){
+				$scope.article.votes.up++;
+				$scope.article.votes.set = true;
+			}
+		});
 	}
 
 	$scope.showComments = function(id){
@@ -50,4 +65,19 @@ app.filter('filterId', function(){
         })
         return output;
     }
+});
+
+app.filter('datefilter',function(){
+	return function(timestr){
+		if(parseInt(timestr.substring(0,2))>12){
+			return (parseInt(timestr.substring(0,2))-12)+timestr.substring(2)+" PM";
+		}
+		else if(parseInt(timestr.substring(0,2))===0){
+			return (12)+timestr.substring(2)+" AM";
+		}
+		else if(parseInt(timestr.substring(0,2))===12){
+			return (12)+timestr.substring(2)+" PM";
+		}
+		else return timestr+" AM";
+	}
 });

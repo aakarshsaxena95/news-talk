@@ -15,7 +15,7 @@ block contains
 								p {{article.image.caption}}
 						p.articleAbstract {{article.abstract}} 
 							a(href='{{article.url}}') Read full story. 
-						p.small {{article.timestamp.substring(11,16)}}AM 
+						p.small {{article.timestamp.substring(11,16) | datefilter}}
 							span(style='float:right') {{article.timestamp.substring(0,10).split('-').reverse().join('/')}} 
 						br
 						if(user)

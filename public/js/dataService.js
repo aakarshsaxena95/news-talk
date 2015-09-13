@@ -10,7 +10,8 @@
 			addToReadingList : addToReadingList,
 			getReadingList : getReadingList,
 			upvote:upvote,
-			getComments : getComments
+			getComments : getComments,
+			removeFromReadingList: removeFromReadingList
 		};
 
 		function getArticles(numsRecieved){
@@ -46,8 +47,17 @@
 				id: id,
 				user: userid
 			};
-			$http.post('/api/user/'+userid,data);	
+			$http.post('/api/user/add/'+userid,data);	
 		}
+
+		function removeFromReadingList(id,userid){
+			var data = {
+				id: id,
+				user: userid
+			};
+			$http.post('/api/user/rem/'+userid,data);	
+		}
+
 		function getReadingList(userid){
 			console.log('/api/readinglist/0');
 			return $http({
