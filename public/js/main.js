@@ -17,7 +17,7 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 			$scope.articles.articles.push(article);
 		});
 		$scope.reachedEnd = articles.reachedEnd;
-		console.log($scope.reachedEnd+"in getArticlesSuccess");
+		console.log($scope.articles.articles);
 	}
 
 	$scope.addToReadingList = function(id,userid){
@@ -45,8 +45,12 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 
 	$scope.showComments = function(id){
 		dataService.getComments(id).then(function(data){
-			$scope.comments[id] = data.comments;
-			console.log($scope.comments);
+			$scope.articles.articles.forEach(function(article){
+				if(article._id === id ){
+					article.fetchedComments = data.comments;
+				}
+			});
+			console.log($scope.fetchedComments);
 		});
 	}
 

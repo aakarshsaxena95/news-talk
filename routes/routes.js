@@ -19,22 +19,84 @@ var isAuthenticated = function (req, res, next) {
 
 
 /*
-  GET ROUTES
+*      GET ROUTES
+       Routes for rendering pages.
+       Following routes and corresponding page:
+  
+  Already Implemented
+
+       ROUTE              PAGE                FILE                AUTHENTICATION REQUIRED
+-------------------------------------------------------------------------------------------
+  1.   /                  LATEST NEWS         index.jade          No
+  2.   /top               TOP STORIES         top.jade            No
+  3.   /readinglist       READING LIST        readinglist.jade    Yes
+  4.   /register          REGISTERATION       register.jade       Must be logged out
+  5.   /login             LOGIN               login.jade          Must be logged out
+  6.   /article/:id       UNIQUE ARTICLE      article.jade        No
+  7.   /logout            LOGOUT              -----N/A-------     Yes
+-------------------------------------------------------------------------------------------
+
+  To be implemented
+       ROUTE              MAIN USE                      FEATURES
+  1.   /myprofile         USER PROFILE AND OPTIONS      Passowrd change
+                                                        Display comments
+                                                        Display upvotes
+                                                        Reading List
+  
+  2.   /user/:userid      USER RPOFILE OF OTHER USERS   Display comments
+                                                        Display upvotes
+                                                        Reading List
+  
+  3.   /about             ABOUT PAGE OF THE APP
+
+  4.   /tags              LIST ALL TAGS WITH LINKS      Make a graph with size depending on
+                                                        amount of posts on a certain tag
+                                                        List all tags seperately.
+  
+  5.   /tag/:tagname      POSTS UNDER THIS TAG          List articles by tagname. 
+                                                        Allow sorting by latest and top.
+
+  6.   /contact           CONTACT PAGE  
+
+---------------------------------------------------------------------------------------------------
+
+COMMON PAGES
+    
+    1. Upvotes and downvotes(When doing either, check if user already up or downed it. if yes proceed accordingly)
+    2. Comment edit and delete
+    3. Comment:-  vote & reply (ng-show Show Comments only if comments are actually there)
+    4. 
+
+
+
+  Others
+  TWITTER FEED -------------------------------------------------------------------------------
+  FACEBOOK GRAPH API--------------------------------------------------------------------------
+  SENTIMENT ANALYSIS--------------------------------------------------------------------------
+  RECOMMENDATION SYSTEM FOR USERS-------------------------------------------------------------
 */
 
-//Route to home page aka Latest News
+/*
+*     Route to home page aka LATEST NEWS
+*/
 router.get('/',function(req,res){
 	res.render('index',{
 		user:req.user
 	});
 });
 
-//Route to get top stories
+
+/*
+*     Route to get TOP STORIES
+*/
 router.get('/top',function(req,res){
   res.render('top');
 });
 
-//Route to get reading list
+
+/*
+*     Route to get READING LIST
+*/
 router.get('/readinglist/',function(req,res){
   if(!req.user){
    res.redirect('/login'); 
@@ -44,7 +106,9 @@ router.get('/readinglist/',function(req,res){
   });
 });
 
-//Route to register the user
+/*
+*     Route to REGISTRATION
+*/
 router.get('/register', function(req, res) {
     if(req.user){
       //redirect if user is logged in
@@ -53,7 +117,9 @@ router.get('/register', function(req, res) {
     res.render('register', { });
 });
 
-//Route to login page
+/*
+*     Route to login page
+*/
 router.get('/login', function(req, res) {
     if(req.user){
       res.redirect('/');
@@ -61,13 +127,17 @@ router.get('/login', function(req, res) {
     res.render('login', { user : req.user });
 });
 
-//Route to log the user out and end the session
+/*
+*     Route to log the user out and end the session
+*/
 router.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
 
-//Route to get an individual article
+/*
+*     Route to get an individual article
+*/
 router.get('/article/:id',function(req,res){
   res.render('article.jade', {
     article:Article.findOne({_id:req.params.id})
@@ -76,6 +146,7 @@ router.get('/article/:id',function(req,res){
 
 /*
   POST ROUTES
+  Redirects
 */
 
 //Handle post request to register the user
@@ -91,9 +162,55 @@ router.post('/login', passport.authenticate('login', {
     failureFlash: true
 }));
  
-//REST API for the app
 
-//Request to get the articles in groups of 10 starting from the latest determined by the page variable (0 for the first batch)
+
+
+/*
+* REST API for the app
+----------------------------------------------------------------------------------------------------
+  ALREADY IMPLEMENTED
+
+           ROUTE                            DATA                          AUTH   NOTES
+    -------------------------------------------------------------------------------------------
+      a) ARTICLES (All routes are GET)
+          1.   /api/articles/:page          10 ARTICLES PER PAGE          No
+          2.   /api/readinglist/:page       10 ARTICLES PER PAGE          Yes
+          3.   /api/article/:id             1 ARTICLE SENT                No     Send comments as well
+           
+      b) COMMENTS
+          GET
+           1.   /api/article/comments/:id    COMMENTS ON THE ARTICLE       No
+          POST
+           1.   /api/article/:id             ADD COMMENTS ON ARTICLES      Yes
+          PUT 
+          DELETE
+
+      c) USERS
+  
+  TO BE IMPLEMENTED
+      ARTICLES
+          Get articles by tags
+          Get articles by top
+              * Day
+              * Month
+              * Year
+              * All time
+          Search and return best matched articles
+
+      COMMENTS
+          GET, POST, DELETE and EDIT  comments on comments
+      
+
+      USERS
+          GET other users info w/o passwords
+          
+*/
+
+
+/*
+*       Request to get the articles in groups of 10 starting from the latest determined by 
+*       the page variable (0 for the first batch)
+*/
 router.get('/api/articles/:page',function(req,res){
   var articleObj = {};
   Article.find({})
@@ -122,6 +239,22 @@ router.get('/api/readinglist/:page',function(req,res){
    });
   });
 });
+
+// //Fetch articles by tags
+// router.get('/api/articles/:page',function(req,res){
+//   var articleObj = {};
+//   Article.find({})
+//          .limit(10)
+//          .skip(req.params.page*10)
+//          .sort({timestamp:-1})
+//          .exec(function(err,arts){
+//           articleObj.articles = arts;
+//             if (arts.length<10){
+//               articleObj.reachedEnd = true;
+//             }
+//             res.json(articleObj);
+//          });
+// });
 
 //Request to get an article JSON by its ID
 router.get('/api/article/:id',function(req,res){

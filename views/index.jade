@@ -4,7 +4,7 @@ block contains
 		div(ng-controller="ArticleController")
 			div(infinite-scroll='getArticles()' infinite-scroll-disabled='reachedEnd' infinite-scroll-distance='1')
 				div(ng-repeat="article in articles.articles track by $index").row
-					.col-md-6.articleWrapper(ng-init = 'id = article._id')
+					.col-md-8.articleWrapper(ng-init = 'id = article._id')
 						center
 							h5 {{article.section}} {{reachedEnd}}
 						h2.articleTitle {{article.title}}
@@ -32,11 +32,12 @@ block contains
 								span.readingListLink(ng-init='userid = #{JSON.stringify(user._id)}' ng-click="addToReadingList(id,userid)")
 									img(src='/img/plus.png', width='20px')
 									|    Add to Reading List
-							//- .commentsContainer(id="{{id}}")
+							.commentsContainer(id="{{id}}")
 								//- .eachcomment(ng-repeat="comment in comments | filterId:id")
-								//- 	img.profilepicture(src="http://lorempixel.com/output/people-q-c-100-100-9.jpg" width=50)
-								//- 	h5.commentusername {{comment.user.name}}
-								//- 	p {{comment.content}}
+								.eachcomment(ng-repeat="comment in article.fetchedComments" ng-show="article.fetchedComments")
+									img.profilepicture(src="" width=50)
+									h5.commentusername {{comment.user.name}}
+									p {{comment.content}}
 								form(ng-init='user = #{JSON.stringify(user)}' ng-submit='commentForm(id,user,contents)')
 									textarea(name='contents', ng-model='contents', class="form-control commentform", cols='6')
 									button(type='submit' class="submitbtn") Submit
