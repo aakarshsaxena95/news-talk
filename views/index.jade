@@ -32,11 +32,17 @@ block contains
 								span.readingListLink(ng-init='userid = #{JSON.stringify(user._id)}' ng-click="addToReadingList(id,userid)")
 									img(src='/img/plus.png', width='20px')
 									|    Add to Reading List
-							.commentsContainer(id="{{id}}")
-								.eachcomment(ng-repeat="comment in comments | filterId:id")
-									img.profilepicture(src="http://lorempixel.com/output/people-q-c-100-100-9.jpg" width=50)
-									h5.commentusername {{comment.user.name}}
-									p {{comment.content}}
+							//- .commentsContainer(id="{{id}}")
+								//- .eachcomment(ng-repeat="comment in comments | filterId:id")
+								//- 	img.profilepicture(src="http://lorempixel.com/output/people-q-c-100-100-9.jpg" width=50)
+								//- 	h5.commentusername {{comment.user.name}}
+								//- 	p {{comment.content}}
 								form(ng-init='user = #{JSON.stringify(user)}' ng-submit='commentForm(id,user,contents)')
 									textarea(name='contents', ng-model='contents', class="form-control commentform", cols='6')
 									button(type='submit' class="submitbtn") Submit
+						else
+							p
+								a(href="/login") Login
+								|  or 
+								a(href="/register") Register
+								|  to vote or comment.
