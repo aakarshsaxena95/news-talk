@@ -31,17 +31,41 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 
 	$scope.upvote = function(id){
 		upvoteIncrementer(id);
+		console.log("in upvote ",id);
 		dataService.upvote(id);
 	}
 
 	var upvoteIncrementer = function(id){
-		$scope.articles.forEach(function(article){
-			if(article && article._id === id && !$scope.article.votes.set){
-				$scope.article.votes.up++;
-				$scope.article.votes.set = true;
+		console.log(id);
+		$scope.articles.articles.forEach(function(article){
+			console.log(article);
+			if(article && article._id === id && !article.votes.set){
+				console.log(article);
+				article.votes.up++;
+				article.votes.set = true;
 			}
 		});
 	}
+
+
+	$scope.downvote = function(id){
+		downvoteIncrementer(id);
+		console.log("in downvote ",id);
+		dataService.downvote(id);
+	}
+
+	var downvoteIncrementer = function(id){
+		console.log(id);
+		$scope.articles.articles.forEach(function(article){
+			console.log(article);
+			if(article && article._id === id && !article.votes.set){
+				console.log(article);
+				article.votes.down++;
+				article.votes.set = true;
+			}
+		});
+	}
+
 
 	$scope.showComments = function(id){
 		dataService.getComments(id).then(function(data){

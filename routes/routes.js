@@ -5,7 +5,9 @@ var mongoose = require('mongoose');
 var q = require('q');
 var ObjectID = require('mongoose').Schema.ObjectId;
 
-//Schemas
+/*
+*     Schemas
+*/
 var Article = require('../models/article.js');
 var User = require('../models/user.js');
 var Comment = require('../models/comment.js');
@@ -207,7 +209,9 @@ router.post('/login', passport.authenticate('login', {
 */
 
 
+
 /*
+*       LATEST NEWS FETCH   (10 PER PAGE)
 *       Request to get the articles in groups of 10 starting from the latest determined by 
 *       the page variable (0 for the first batch)
 */
@@ -226,7 +230,11 @@ router.get('/api/articles/:page',function(req,res){
          });
 });
 
-//Fetch data for reading list
+
+
+/*
+*     Fetch data for reading list
+*/
 router.get('/api/readinglist/:page',function(req,res){
   articleArr ={articles:[]};
   req.user.readingList.forEach(function(articleID){
@@ -239,6 +247,76 @@ router.get('/api/readinglist/:page',function(req,res){
    });
   });
 });
+
+/*
+*     TOP ARTICLES
+*     By Day, month and week
+*     
+*     //TODO: insert code to modify the dates
+*
+*/
+
+// //DAY
+// router.get('/api/top/day/:page',function(req,res){
+//       Article.find({})
+//          .limit(10)
+//          .skip(req.params.page*10)
+//          .sort({votes.up:-1})
+//          .exec(function(err,arts){
+//           articleObj.articles = arts;
+//             if (arts.length<10){
+//               articleObj.reachedEnd = true;
+//             }
+//             res.json(articleObj);
+//          });
+// });
+
+//WEEK
+router.get('/api/top/week/:page',function(req,res){
+      Article.find({})
+         .limit(10)
+         .skip(req.params.page*10)
+         
+         .sort({votecount:-1})
+         .exec(function(err,arts){
+          articleObj.articles = arts;
+            if (arts.length<10){
+              articleObj.reachedEnd = true;
+            }
+            res.json(articleObj);
+         });
+});
+
+// //MONTH
+// router.get('/api/top/month/:page',function(req,res){
+//         Article.find({})
+//          .limit(10)
+//          .skip(req.params.page*10)
+//          .sort({votes.up:-1})
+//          .exec(function(err,arts){
+//           articleObj.articles = arts;
+//             if (arts.length<10){
+//               articleObj.reachedEnd = true;
+//             }
+//             res.json(articleObj);
+//          });
+// });
+
+//ALL-TIME
+// router.get('/api/top/:page',function(req,res){
+//         Article.find({})
+//          .limit(10)
+//          .skip(req.params.page*10)
+//          .sort({votes.up:-1})
+//          .exec(function(err,arts){
+//           articleObj.articles = arts;
+//             if (arts.length<10){
+//               articleObj.reachedEnd = true;
+//             }
+//             res.json(articleObj);
+//          });
+// });
+
 
 // //Fetch articles by tags
 // router.get('/api/articles/:page',function(req,res){
@@ -329,12 +407,30 @@ router.post('/api/user/rem/:uid',function(req,res){
 });
 
 
-//VOTING
-//Upvotes
+/*
+*     VOTING
+*/
+
+
+/*
+*     Upvote
+*/
 router.post('/api/article/up/:id',function(req,res){
   console.log(mongoose.Schema.ObjectId(req.user.id));
+  Article.findByIdAndUpdate(req.params.id, {$pull:{"votes.down":(req.user.id)}}, null,function(asdf){console.log(asdf);});
   Article.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
   res.send('Updated');  
 });
+
+/*
+*     Downvote
+*/
+router.post('/api/article/down/:id',function(req,res){
+  console.log(mongoose.Schema.ObjectId(req.user.id));
+  Article.findByIdAndUpdate(req.params.id, {$pull:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
+  Article.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.down":(req.user.id)}}, null,function(asdf){console.log(asdf);});
+  res.send('Updated');  
+});
+
 
 module.exports = router;

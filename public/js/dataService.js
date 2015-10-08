@@ -9,9 +9,10 @@
 			postComments : postComments,
 			addToReadingList : addToReadingList,
 			getReadingList : getReadingList,
-			upvote:upvote,
+			upvote : upvote,
+			downvote : downvote,
 			getComments : getComments,
-			removeFromReadingList: removeFromReadingList
+			removeFromReadingList : removeFromReadingList
 		};
 
 		function getArticles(numsRecieved){
@@ -70,6 +71,12 @@
 			return $http({
 				method:'post',
 				url:'/api/article/up/'+id
+			});
+		}
+		function downvote(id){
+			return $http({
+				method:'post',
+				url:'/api/article/down/'+id
 			});
 		}
 		function getComments(id){

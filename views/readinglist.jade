@@ -2,7 +2,7 @@ extends layout
 
 block contains
 		div(ng-controller="ReadingListController")
-			div(ng-repeat="article in articles track by $index").row
+			div(ng-repeat="article in articles track by $index" ng-show="articles").row
 				.col-md-6.articleWrapper(ng-init = 'id = article._id' ng-show='article._id')
 					center
 						h5 {{article.section}}
@@ -34,3 +34,5 @@ block contains
 					//- 	form(ng-submit='commentForm(id,userid,contents)')
 					//- 		input(type='text', name='contents', ng-model='contents')
 					//- 		button(type='submit') Submit
+			div(ng-hide="articles") 
+				h1 No articles to show
