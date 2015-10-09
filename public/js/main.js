@@ -1,3 +1,4 @@
+/// <reference path="../../typings/angularjs/angular.d.ts"/>
 var app = angular.module('newstalk',['infinite-scroll']);
 
 app.controller("ArticleController",['$scope','$http','dataService',function($scope,$http,dataService){
@@ -6,7 +7,6 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 	$scope.articles = {articles:[]};
 	$scope.reachedEnd = false;
 	$scope.getArticles = function(){
-		console.log($scope.reachedEnd)
 		if(!$scope.reachedEnd)
 		dataService.getArticles($scope.articles.articles.length)
 			.then(getArticlesSuccess);
@@ -17,11 +17,9 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 			$scope.articles.articles.push(article);
 		});
 		$scope.reachedEnd = articles.reachedEnd;
-		console.log($scope.articles.articles);
 	}
 
 	$scope.addToReadingList = function(id,userid){
-		console.log("Clicked on add to reading list");
 		dataService.addToReadingList(id,userid);
 	};
 
@@ -29,38 +27,37 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 		dataService.removeFromReadingList(id,userid);
 	}
 
-	$scope.upvote = function(id){
-		upvoteIncrementer(id);
-		console.log("in upvote ",id);
+	$scope.upvote = function(id,userid){
+		upvoteIncrementer(id,userid);
 		dataService.upvote(id);
 	}
 
-	var upvoteIncrementer = function(id){
+	var upvoteIncrementer = function(id,userid){
 		console.log(id);
 		$scope.articles.articles.forEach(function(article){
 			console.log(article);
 			if(article && article._id === id && !article.votes.set){
 				console.log(article);
-				article.votes.up++;
+				article.votes.up.push(userid);
 				article.votes.set = true;
+				console.log(article);
 			}
 		});
 	}
 
 
-	$scope.downvote = function(id){
-		downvoteIncrementer(id);
-		console.log("in downvote ",id);
+	$scope.downvote = function(id,userid){
+		downvoteIncrementer(id,userid);
 		dataService.downvote(id);
 	}
 
-	var downvoteIncrementer = function(id){
+	var downvoteIncrementer = function(id,userid){
 		console.log(id);
 		$scope.articles.articles.forEach(function(article){
 			console.log(article);
 			if(article && article._id === id && !article.votes.set){
 				console.log(article);
-				article.votes.down++;
+				article.votes.down.push(userid);
 				article.votes.set = true;
 			}
 		});
@@ -79,10 +76,13 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 	}
 
 	$scope.commentForm = function(id,user,contents) {
+		
 		dataService.postComments(id,user,contents);
 	}
 }]);
 
+
+//FILTERS
 app.filter('filterId', function(){
     return function(collection, id) {
         var output = [];

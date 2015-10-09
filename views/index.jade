@@ -19,17 +19,17 @@ block contains
 							span(style='float:right') {{article.timestamp.substring(0,10).split('-').reverse().join('/')}} 
 						br
 						if(user)
-							.buttonsContainer
-								span.up(ng-click='upvote(id)')
+							.buttonsContainer(ng-init='userid = #{JSON.stringify(user._id)}')
+								span.up(ng-click='upvote(id,userid)')
 									img(src='/img/up.png', width='20px')
 									|    {{article.votes.up.length}}
-								span.down(ng-click='downvote(id)')
+								span.down(ng-click='downvote(id,userid)')
 									img(src='/img/down.png', width='20px')
 									|    {{article.votes.down.length}}
 								span.commentLink(ng-click='showComments(id)')
 									img(src='/img/comment.png', width='20px')
 									|    Comment
-								span.readingListLink(ng-init='userid = #{JSON.stringify(user._id)}' ng-click="addToReadingList(id,userid)")
+								span.readingListLink( ng-click="addToReadingList(id,userid)")
 									img(src='/img/plus.png', width='20px')
 									|    Add to Reading List
 							.commentsContainer(id="{{id}}")

@@ -236,7 +236,7 @@ router.get('/api/articles/:page',function(req,res){
 *     Fetch data for reading list
 */
 router.get('/api/readinglist/:page',function(req,res){
-  articleArr ={articles:[]};
+  var articleArr = {articles:[]};
   req.user.readingList.forEach(function(articleID){
     Article.findOne({_id:articleID})
     .exec(function(err,art){
@@ -273,18 +273,49 @@ router.get('/api/readinglist/:page',function(req,res){
 
 //WEEK
 router.get('/api/top/week/:page',function(req,res){
-      Article.find({})
-         .limit(10)
-         .skip(req.params.page*10)
+//      var articleObj = {};
+//      Article.find({})
+//         .limit(10)
+//         .skip(req.params.page*10)
+//         
+//         .sort({votecount:-1})
+//         .exec(function(err,arts){
+//          articleObj.articles = arts;
+//            if (arts.length<10){
+//              articleObj.reachedEnd = true;
+//            }
+//            res.json(articleObj);
+//         });
          
-         .sort({votecount:-1})
-         .exec(function(err,arts){
-          articleObj.articles = arts;
-            if (arts.length<10){
-              articleObj.reachedEnd = true;
+         Article.aggregate(
+    [
+        { "$project": {
+            "timestamp": 1,
+            "url": 1,
+            "abstract": 1,
+            "title": 1,
+            "section": 1,
+            "comments": 1,
+            "votes": 1,
+            "image": 1,
+            "voteCount": { 
+                "$subtract": [
+                    { "$size": "$votes.up" },
+                    { "$size": "$votes.down" }
+                ]
             }
-            res.json(articleObj);
-         });
+        }},
+        { "$sort": { "voteCount": -1 } },
+        { "$skip": req.params.page*10 },
+        { "$limit": 10 },
+    ],
+    function(err,results) {
+        if(results.length < 10){
+          results.reachedEnd = true;
+        }
+        res.json(results);
+    }
+);
 });
 
 // //MONTH
@@ -342,9 +373,9 @@ router.get('/api/article/:id',function(req,res){
   });
 });
 
-//Request to get an comments on an article JSON by its ID
+//Request to get a comments on an article JSON by its ID
 router.get('/api/article/comments/:id',function(req,res){
-  commentsArr = {comments:[]};
+  var commentsArr = {comments : []};
   Article.findOne({_id:req.params.id})
   .exec(function(err,art){
     art.comments.forEach(function(commentID){
@@ -352,6 +383,9 @@ router.get('/api/article/comments/:id',function(req,res){
         .exec(function(err,comm){
           commentsArr.comments.push(comm);
           if(commentsArr.comments.length === art.comments.length){
+            commentsArr.comments.sort(function(a,b) {
+              return(a.timestamp - b.timestamp);
+            });
             res.json(commentsArr);
           }
       });
