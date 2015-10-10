@@ -217,10 +217,8 @@ router.post('/login', passport.authenticate('login', {
 
       USERS
           GET other users info w/o passwords
-          
 */
-
-
+          
 
 /*
 *       LATEST NEWS FETCH   (10 PER PAGE)

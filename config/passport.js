@@ -88,9 +88,10 @@ module.exports = function(passport) {
               // set the user's local credentials
               fs.readFile(req.files.profilePicture.path, function (err, data) {
                 console.log(req.files.profilePicture);
-                var newPath = __dirname+"/profilePicture/"+newUser._id;
+                var newPath = "/home/ayushgp/learning/webdev/news-talk/public/img/profilePicture/"+newUser._id+".jpg";
+                var relPath = "img/profilePicture/"+newUser._id+".jpg";
                 fs.writeFile(newPath, data, function (err) {
-                newUser.profilePicture = newPath;      
+                newUser.profilePicture = relPath;      
                 console.log(newUser,"YOYLO");
                 newUser.name = name;
               newUser.password = password;
