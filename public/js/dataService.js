@@ -41,7 +41,7 @@
 				name:uname
 			};
 			console.log(data);
-			$http.post('/api/article/'+id,data);
+			return $http.post('/api/article/'+id,data).then(sendResponse);
 		}
 		function addToReadingList(id,userid){
 			var data = {

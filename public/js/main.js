@@ -1,4 +1,6 @@
 /// <reference path="../../typings/angularjs/angular.d.ts"/>
+
+
 var app = angular.module('newstalk',['infinite-scroll']);
 
 app.controller("ArticleController",['$scope','$http','dataService',function($scope,$http,dataService){
@@ -37,10 +39,12 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 		$scope.articles.articles.forEach(function(article){
 			console.log(article);
 			if(article && article._id === id && !article.votes.set){
-				console.log(article);
+				if(article.votes.down.indexOf(userid)>-1){
+					article.votes.down.splice(article.votes.down.indexOf(userid));
+					console.log('removed vote');
+				}
 				article.votes.up.push(userid);
 				article.votes.set = true;
-				console.log(article);
 			}
 		});
 	}
@@ -57,6 +61,10 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 			console.log(article);
 			if(article && article._id === id && !article.votes.set){
 				console.log(article);
+				if(userid in article.votes.up){
+					article.votes.up.splice(article.votes.up.indexOf(userid));
+					console.log('removed vote');
+				}
 				article.votes.down.push(userid);
 				article.votes.set = true;
 			}
@@ -76,8 +84,14 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 	}
 
 	$scope.commentForm = function(id,user,contents) {
-		
-		dataService.postComments(id,user,contents);
+		dataService.postComments(id,user,contents).then(function(x){
+		$scope.articles.articles.forEach(function(article){
+				if(article._id === id ){
+					article.fetchedComments.push(x);
+					console.log(article.fetchedComments);
+				}
+			});
+		});
 	}
 }]);
 

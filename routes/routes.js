@@ -147,6 +147,18 @@ router.get('/article/:id',function(req,res){
 });
 
 /*
+*     Route to my profile page
+*/
+router.get('/myprofile',function(req,res){
+  if(!req.user){
+   res.redirect('/login'); 
+  }
+  res.render('user',{
+    user:req.user
+  });
+})
+
+/*
   POST ROUTES
   Redirects
 */
@@ -248,6 +260,26 @@ router.get('/api/readinglist/:page',function(req,res){
   });
 });
 
+/*
+ *    Fetch titles and links of reading list 
+ */
+router.get('/api/readinglistlinks',function(req,res){
+  var articleArr = {articles:[]};
+  if(req.user){
+      req.user.readingList.forEach(function(articleID){
+        Article.findOne({_id:articleID})
+        .exec(function(err,art){
+          if(art){
+            articleArr.articles.push({url: art.url, title: art.title});
+            if(articleArr.articles.length===req.user.readingList.length){
+              res.json(articleArr);
+            }   
+          }
+         });
+      });
+  }
+  else res.send("User not logged in");
+})
 /*
 *     TOP ARTICLES
 *     By Day, month and week
@@ -413,7 +445,7 @@ router.post('/api/article/:id',function(req,res){
     }
     else{
       console.log("Yay");
-      res.send();
+      res.send(newComment);
     }
   });
 });

@@ -3,7 +3,7 @@ extends layout
 block contains
 		div(ng-controller="ArticleController")
 			div(infinite-scroll='getArticles()' infinite-scroll-disabled='reachedEnd' infinite-scroll-distance='1')
-				div(ng-repeat="article in articles.articles track by $index").row
+				div(ng-repeat="article in articles.articles track by $index" ng-show='articles').row
 					.col-md-8.articleWrapper(ng-init = 'id = article._id')
 						center
 							h5 {{article.section}} {{reachedEnd}}
@@ -28,7 +28,7 @@ block contains
 									|    {{article.votes.down.length}}
 								span.commentLink(ng-click='showComments(id)')
 									img(src='/img/comment.png', width='20px')
-									|    Comment
+									|    Comments
 								span.readingListLink( ng-click="addToReadingList(id,userid)")
 									img(src='/img/plus.png', width='20px')
 									|    Add to Reading List
@@ -42,7 +42,27 @@ block contains
 									textarea(name='contents', ng-model='contents', class="form-control commentform", cols='6')
 									button(type='submit' class="submitbtn") Submit
 						else
-							p
+							.buttonsContainer
+								span.up(ng-click='clk = true')
+									img(src='/img/up.png', width='20px')
+									|    {{article.votes.up.length}}
+								span.down(ng-click='clk = true')
+									img(src='/img/down.png', width='20px')
+									|    {{article.votes.down.length}}
+								span.commentLink(ng-click='showComments(id)')
+									img(src='/img/comment.png', width='20px')
+									|    Comments
+								span.readingListLink( ng-click="clk = true")
+									img(src='/img/plus.png', width='20px')
+									|    Add to Reading List
+							.commentsContainer(id="{{id}}")
+								//- .eachcomment(ng-repeat="comment in comments | filterId:id")
+								.eachcomment(ng-repeat="comment in article.fetchedComments" ng-show="article.fetchedComments")
+									img.profilepicture(src="" width=50)
+									h5.commentusername {{comment.user.name}}
+									p {{comment.content}}
+							br
+							p(ng-show='clk')
 								a(href="/login") Login
 								|  or 
 								a(href="/register") Register

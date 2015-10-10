@@ -1,0 +1,26 @@
+extends layout
+block headfiles
+	script(src = '/js/controllers/userCtrl.js')
+	link(rel='stylesheet', href='/css/users.css')
+
+block contains
+	.top(ng-controller = 'UserController')
+		.row
+			.col-md-6
+				img#pp(src = '#{user.profilePicture}')
+				#topcontainer
+					h2 #{user.name}
+					h4 #{user.email}
+			.col-md-2
+			.col-md-4#readinglistcontainer
+				h2 Reading List
+				ul(ng-repeat = 'link in readingList.articles')
+					li 
+						a(href = '{{link.url}}') {{link.title}}\
+		br
+		br
+		.row
+			.col-md-6
+				h2 Recent comments
+			.col-md-6
+				h2 Recent votes cast
