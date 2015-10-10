@@ -4,13 +4,15 @@ block contains
 		h1 Register
 		br
 		center
-			form(role='form', action="/register",method="post", style='max-width: 300px;')
+			form(role='form', action="/register",method="post", style='max-width: 300px;' enctype="multipart/form-data")
 				.form-group
 					input.form-control(type='text', name="username", placeholder='Enter your full name' required)
 				.form-group
 					input.form-control(type='email', name="email", placeholder='Enter your email address' required)
 				.form-group
 					input.form-control(type='password', name="password", placeholder='Enter a new password' required)
+				.form-group
+					input.form-control(type="file", name="profilePicture")
 				button.btn.btn-default.btn-large(type='submit') Submit
 			br
 			.col-md-4

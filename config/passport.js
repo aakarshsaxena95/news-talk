@@ -1,5 +1,8 @@
+/// <reference path="../typings/node/node.d.ts"/>
+/// <reference path="../typings/node/node.d.ts"/>
 var LocalStrategy   = require('passport-local').Strategy;
 var bCrypt   = require('bcrypt-nodejs');
+var fs = require('fs');
 
 var createHash = function(password){
  return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
@@ -83,21 +86,28 @@ module.exports = function(passport) {
               // create the user
               var newUser = new User();
               // set the user's local credentials
-              newUser.name = name;
+              fs.readFile(req.files.profilePicture.path, function (err, data) {
+                console.log(req.files.profilePicture);
+                var newPath = __dirname+"/profilePicture/"+newUser._id;
+                fs.writeFile(newPath, data, function (err) {
+                newUser.profilePicture = newPath;      
+                console.log(newUser,"YOYLO");
+                newUser.name = name;
               newUser.password = password;
               newUser.email = req.param('email');
-              newUser.profilePicture = "";
+              
               newUser.readingList = [];
               // save the user
               newUser.save(function(err) {
-                console.log("in save");
                 if (err){
                   console.log('Error in Saving user: '+err);  
                   throw err;  
-                }
-                console.log("Created new user "+newUser);    
+                }    
                 return done(null, newUser);
               });
+                });
+              });
+              
             }
           });
         };
