@@ -5,6 +5,7 @@ block headfiles
 
 block contains
 	.top(ng-controller = 'UserController')
+		span(ng-init = 'username = "#{user.name}"')
 		.row
 			.col-md-6
 				img#pp(src = '#{user.profilePicture}')
@@ -14,13 +15,19 @@ block contains
 			.col-md-2
 			.col-md-4#readinglistcontainer
 				h2 Reading List
-				ul(ng-repeat = 'link in readingList.articles')
+				ul(ng-repeat = 'link in readinglist' ng-show="readinglist")
 					li 
-						a(href = '{{link.url}}') {{link.title}}\
+						a(href = '{{link.url}}') {{link.title}}
+				p(ng-hide='readinglist') No articles in user reading list
 		br
 		br
 		.row
 			.col-md-6
 				h2 Recent comments
+				.recentcomments(ng-repeat = 'comment in recentcomments')
+					p {{username}} commented 
+						span.commentcontent {{comment.content}} 
+						|  on 
+						a(href = '{{comment.article.link}}') {{comment.article.title}}.
 			.col-md-6
 				h2 Recent votes cast
