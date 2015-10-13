@@ -40,14 +40,15 @@ body{
 .profilepicture{
 	border-radius:100px;
 	border:solid 1px black;
+	size: 100%;
 	float:left;
-	margin-right:15px;
 }
 
 .eachcomment{
-	padding:10px;
+	padding-bottom:15px;
+	padding-top: 10px;
 	background-color:#eeeeee;
-	margin:1px;
+	margin:2px;
 }
 
 .commentusername{
@@ -188,3 +189,15 @@ h3:before {
   left: 0;
 }
 
+.right{float:right;}
+.glyphicon-remove{
+	opacity: .4;
+	transition: opacity ease-out .5;
+}
+.glyphicon-remove:hover{
+	opacity: .8;
+	cursor: pointer;
+}
+.editreply{
+	margin-left: 20%;
+}
