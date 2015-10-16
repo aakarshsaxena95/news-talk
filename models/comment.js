@@ -7,7 +7,8 @@ var commentsSchema = new mongoose.Schema({
 	content: String,
 	user: {
 		name:String,
-		id:String
+		id:String,
+		profilePicture:String
 	},
 	article: String,
 	votes:{

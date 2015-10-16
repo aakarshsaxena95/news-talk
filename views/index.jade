@@ -8,15 +8,16 @@ block contains
 						center
 							h5 {{article.section}} {{reachedEnd}}
 						h2.articleTitle {{article.title}}
-						.row.imgWrapper(ng-show='{{article.image.url}}')
+						//.row.imgWrapper(ng-show='{{article.image.url}}')
 							.col-md-8.articleImage
 								img(src='{{article.image.url}}', width='100%')
 							.col-md-4.articleCaption
 								p {{article.image.caption}}
+								
 						p.articleAbstract {{article.abstract}} 
 							a(href='{{article.url}}') Read full story. 
 						p.small {{article.timestamp.substring(11,16) | datefilter}}
-							span(style='float:right') {{article.timestamp.substring(0,10).split('-').reverse().join('/')}} 
+							span(style='float:right') {{article.timestamp.substring(0,10).split('-').reverse() | articleDateFilter}} 
 						br
 						if(user)
 							.buttonsContainer(ng-init='userid = #{JSON.stringify(user._id)}')
@@ -32,13 +33,14 @@ block contains
 								span.readingListLink( ng-click="addToReadingList(id,userid)")
 									img(src='/img/plus.png', width='20px')
 									|    Add to Reading List
-							.commentsContainer(id="{{id}}")
+							.commentsContainer(id="{{id}}" ng-show='article.fetchedComments')
 								.eachcomment(ng-repeat="comment in article.fetchedComments" ng-show="article.fetchedComments")
 									.col-md-2
 										img.profilepicture(ng-src="img/profilePicture/{{user._id}}.jpg" width=50)
 									.col-md-10
 										span.glyphicon.glyphicon-remove.right
 										h5.commentusername {{comment.user.name}}
+										p.comment-time {{comment.timestamp | timestampFilter}}
 										p {{comment.content}}
 										span.votes(style="font-size:.85em; font-color:black;")
 											span.up
@@ -49,11 +51,7 @@ block contains
 												|  {{comment.votes.down.length}}
 										span.editreply
 											| Edit &nbsp;&nbsp;&nbsp;&nbsp;Reply
-									br
-									br
-									br
-									br
-								form(ng-init='user = #{JSON.stringify(user)}' ng-submit='commentForm(id,user,contents)')
+								form(ng-init='user = #{JSON.stringify(user)}' ng-submit='commentForm(id,user,contents);showComments(id);')
 									textarea(name='contents', ng-model='contents', class="form-control commentform", cols='6')
 									button(type='submit' class="submitbtn") Submit
 						else
@@ -71,11 +69,20 @@ block contains
 									img(src='/img/plus.png', width='20px')
 									|    Add to Reading List
 							.commentsContainer(id="{{id}}")
-								//- .eachcomment(ng-repeat="comment in comments | filterId:id")
 								.eachcomment(ng-repeat="comment in article.fetchedComments" ng-show="article.fetchedComments")
-									img.profilepicture(ng-src="img/profilePicture/{{user._id}}.jpg" width=50)
-									h5.commentusername {{comment.user.name}}
-									p {{comment.content}}
+									.col-md-2
+										img.profilepicture(ng-src="img/profilePicture/.jpg" width=50)
+									.col-md-10
+										h5.commentusername {{comment.user.name}}
+										p.comment-time {{comment.timestamp | timestampFilter}}
+										p {{comment.content}}
+										span.votes(style="font-size:.85em; font-color:black;")
+											span.up
+												img(src='/img/up.png', width='15px')
+												|  {{comment.votes.up.length}}
+											span.down
+												img(src='/img/down.png', width='15px')
+												|  {{comment.votes.down.length}}
 							br
 							p(ng-show='clk')
 								a(href="/login") Login

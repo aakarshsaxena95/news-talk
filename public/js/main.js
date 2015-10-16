@@ -123,3 +123,20 @@ app.filter('datefilter',function(){
 		else return timestr+" AM";
 	}
 });
+
+app.filter('timestampFilter',function(){
+	return function(text){
+			var day = new Date(text.substring(0,19)+'Z');
+			console.log(text.substring(0,19)+'Z');
+			var returned = relativeDate(day);
+			console.log(returned);
+			return returned;
+		};
+	});
+
+app.filter('articleDateFilter',function(){
+	return function(text){
+		var month = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+		return text[0]+" "+month[parseInt(text[1])]+", "+text[2];
+	};
+});

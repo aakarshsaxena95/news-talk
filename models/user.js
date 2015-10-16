@@ -8,10 +8,11 @@ var UserSchema = new mongoose.Schema({
 	email: String,
 	profilePicture: String,
 	password: String,
-	readingList: [ObjectID]
+	readingList: [ObjectID],
+	comments: [ObjectID]
 },{ strict: false });
 
 
-User = mongoose.model('User',UserSchema,'users');
+var User = mongoose.model('User',UserSchema,'users');
 
 module.exports = User;

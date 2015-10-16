@@ -21,11 +21,11 @@ angular.module("newstalk")
 			}
 		
 		*/
-//		$http.get('/api/commentsforprofile').then(function(response){
-//			response.data.comments.forEach(function(comment){
-//				$scope.recentcomments.push(comment);				
-//			});
-//		});
+		$http.get('/api/commentsforprofile').then(function(response){
+			response.data.comments.forEach(function(comment){
+				$scope.recentcomments.push(comment);				
+			});
+		});
 				$scope.recentcomments.push({
 					content:'asfasyudfbsdah kuawsgfkuya gsdkf',
 					article:{

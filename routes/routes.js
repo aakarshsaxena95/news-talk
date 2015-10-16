@@ -277,7 +277,15 @@ router.get('/api/readinglistlinks',function(req,res){
       });
   }
   else res.send("User not logged in");
-})
+});
+
+router.get('/api/commentsforprofile',function(req,res){
+  if(req.user){
+    user.comments.forEach(function(comment){
+      
+    });
+  }
+});
 /*
 *     TOP ARTICLES
 *     By Day, month and week
@@ -429,6 +437,7 @@ router.post('/api/article/:id',function(req,res){
   newComment.content = req.body.content;
   newComment.user.id = req.body.id;
   newComment.user.name = req.body.name;
+  newComment.user.profilePicture = req.user.profilePicture;
   newComment.votes.up = [];
   newComment.votes.down = [];
   newComment.comments = [];
@@ -442,7 +451,7 @@ router.post('/api/article/:id',function(req,res){
       console.log(err);
     }
     else{
-      console.log("Yay");
+      console.log(newComment);
       res.send(newComment);
     }
   });
