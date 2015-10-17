@@ -12,7 +12,8 @@
 			upvote : upvote,
 			downvote : downvote,
 			getComments : getComments,
-			removeFromReadingList : removeFromReadingList
+			removeFromReadingList : removeFromReadingList,
+			deleteComment : deleteComment
 		};
 
 		function getArticles(numsRecieved){
@@ -22,7 +23,12 @@
 			})
 			.then(sendResponse);
 		}
-
+		
+		function deleteComment(commentId){
+			$http.delete('/api/delete/comment/'+commentId)
+				.then(function(response){console.log(response);});
+		}
+		
 		function sendResponse(response){
 				return response.data;
 		}

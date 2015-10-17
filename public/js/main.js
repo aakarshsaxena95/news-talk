@@ -27,12 +27,16 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 
 	$scope.removeFromReadingList = function(id,userid){
 		dataService.removeFromReadingList(id,userid);
-	}
+	};
 
 	$scope.upvote = function(id,userid){
 		upvoteIncrementer(id,userid);
 		dataService.upvote(id);
-	}
+	};
+	
+	$scope.deleteComment = function(commentId){
+		dataService.deleteComment(commentId);
+	};
 
 	var upvoteIncrementer = function(id,userid){
 		console.log(id);

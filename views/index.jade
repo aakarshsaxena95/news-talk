@@ -38,7 +38,7 @@ block contains
 									.col-md-2
 										img.profilepicture(ng-src="img/profilePicture/{{comment.user.id}}.jpg" width=50)
 									.col-md-10
-										span.glyphicon.glyphicon-remove.right
+										span.glyphicon.glyphicon-remove.right(ng-show="comment.user.id === userid" ng-click="deleteComment(comment._id)")
 										h5.commentusername {{comment.user.name}}
 										p.comment-time {{comment.timestamp | timestampFilter}}
 										p {{comment.content}}
@@ -49,7 +49,7 @@ block contains
 											span.down
 												img(src='/img/down.png', width='15px')
 												|  {{comment.votes.down.length}}
-										span.editreply
+										span.editreply(ng-show="comment.user.id === userid")
 											| Edit &nbsp;&nbsp;&nbsp;&nbsp;Reply
 							form(ng-init='user = #{JSON.stringify(user)}' ng-submit='commentForm(id,user,contents);showComments(id);' ng-show='article.clickcomment')
 								textarea(name='contents', ng-model='contents', class="form-control commentform", cols='6')

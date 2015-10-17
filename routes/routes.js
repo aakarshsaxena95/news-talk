@@ -478,6 +478,13 @@ router.post('/api/article/:id',function(req,res){
   });
 });
 
+//comment deletion
+router.delete('/api/delete/comment/:id',function(req,res){
+  if(req.user)
+  Comment.findByIdAndRemove(req.params.id);
+  console.log('removed');
+});
+
 //Addition to reading List
 router.post('/api/user/add/:uid',function(req,res){
   console.log(req.body);
@@ -510,7 +517,6 @@ router.post('/api/user/rem/:uid',function(req,res){
 *     Upvote
 */
 router.post('/api/article/up/:id',function(req,res){
-  console.log(mongoose.Schema.ObjectId(req.user.id));
   Article.findByIdAndUpdate(req.params.id, {$pull:{"votes.down":(req.user.id)}}, null,function(asdf){console.log(asdf);});
   Article.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
   res.send('Updated');  
@@ -520,7 +526,6 @@ router.post('/api/article/up/:id',function(req,res){
 *     Downvote
 */
 router.post('/api/article/down/:id',function(req,res){
-  console.log(mongoose.Schema.ObjectId(req.user.id));
   Article.findByIdAndUpdate(req.params.id, {$pull:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
   Article.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.down":(req.user.id)}}, null,function(asdf){console.log(asdf);});
   res.send('Updated');  
