@@ -22,15 +22,15 @@ angular.module("newstalk")
 		
 		*/
 		$http.get('/api/commentsforprofile').then(function(response){
-			response.data.comments.forEach(function(comment){
-				$scope.recentcomments.push(comment);				
+			console.log(response);
+			response.data.forEach(function(comment){
+				$scope.recentcomments.push(comment);
+				console.log(comment);				
+			});
+			$scope.recentcomments.sort(function(o1,o2){
+				d1 = new Date(o1.timestamp);
+				d2 = new Date(o2.timestamp);
+				return d2-d1;
 			});
 		});
-				$scope.recentcomments.push({
-					content:'asfasyudfbsdah kuawsgfkuya gsdkf',
-					article:{
-						link:'skudhfksdf.com',
-						title:'sjdhfadfkjahgsdhbsd'
-					}
-				});
 	}]);

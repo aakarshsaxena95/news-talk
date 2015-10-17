@@ -9,7 +9,11 @@ var UserSchema = new mongoose.Schema({
 	profilePicture: String,
 	password: String,
 	readingList: [ObjectID],
-	comments: [ObjectID]
+	comments: [ObjectID],
+	votes:{
+		up:[ObjectID],
+		down:[ObjectID]
+	}
 },{ strict: false });
 
 

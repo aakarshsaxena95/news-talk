@@ -30,11 +30,13 @@ body{
 	font-variant: small-caps;
 	letter-spacing:2px;
 	font-size:1.4em;
+	overflow: hidden;
 }
 
 .navlinks a{
 	color: #000000;
 	text-decoration:none;
+	overflow: hidden;
 }
 
 #footer{

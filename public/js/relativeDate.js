@@ -24,7 +24,6 @@ var relativeDate = function(date){
 };
 var sameDay = function(date){
 	var now = new Date();
-	console.log(date,now);
 	if(Math.abs(date.getHours()-now.getHours())>1){
 		return Math.abs(date.getHours()-now.getHours())+" hours ago";
 	}
@@ -38,10 +37,10 @@ var sameDay = function(date){
 		if(Math.abs(date.getMinutes()-now.getMinutes())>1){
 			return Math.abs(date.getMinutes()-now.getMinutes())+" minutes ago";
 		}
-		else if(Math.abs(date.getMinutes()-now.getMinutes())==1 && Math.abs(date.getSeconds()-now.getSeconds())>60){
+		else if(Math.abs(date.getMinutes()-now.getMinutes())==1 && Math.abs(now.getSeconds()+(60-date.getSeconds()))>60){
 			return "1 minute ago";
 		}
-		else if(Math.abs(date.getMinutes()-now.getMinutes())==1 && Math.abs(date.getSeconds()-now.getSeconds())<=60){
+		else if(Math.abs(date.getMinutes()-now.getMinutes())==1 && Math.abs(now.getSeconds()+(60-date.getSeconds()))<=60){
 			return Math.abs(now.getSeconds()+(60-date.getSeconds()))+" seconds ago";
 		}
 		else{

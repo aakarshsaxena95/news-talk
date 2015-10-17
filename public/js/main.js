@@ -140,3 +140,13 @@ app.filter('articleDateFilter',function(){
 		return text[0]+" "+month[parseInt(text[1])]+", "+text[2];
 	};
 });
+
+app.filter('commentShortener',function(){
+	return function(text){
+		if(text.length>35){
+			console.log(text);
+			return(text.substring(0,35)+"... ");
+		}
+		return text;
+	};
+});

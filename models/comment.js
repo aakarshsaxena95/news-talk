@@ -8,7 +8,6 @@ var commentsSchema = new mongoose.Schema({
 	user: {
 		name:String,
 		id:String,
-		profilePicture:String
 	},
 	article: String,
 	votes:{

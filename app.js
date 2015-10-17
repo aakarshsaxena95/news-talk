@@ -1,3 +1,6 @@
+/// <reference path="./typings/express/express.d.ts" />
+/// <reference path="./typings/node/node.d.ts" />
+
 var request = require('request');
 var express = require('express');
 var http = require('http');
@@ -28,7 +31,7 @@ var Comment = require('./models/comment.js');
 var m = mongoose.connect('mongodb://localhost/news-talk');
 mongoose.connection.on('open',function(){
 	mongoose.connection.db.listCollections(function (err, names) {
-        console.log(names); // [{ name: 'dbname.myCollection' }]
+        console.log(names);
         module.exports.Collection = names;
  });
 });
@@ -61,7 +64,7 @@ app.use(toastr());
 
 
 
-  url = 'http://api.nytimes.com/svc/topstories/v1/home.jsonp?api-key=c6d1eca37b6784fb7388b1095098fdd9:1:72686982'; 
+  var url = 'http://api.nytimes.com/svc/topstories/v1/home.jsonp?api-key=c6d1eca37b6784fb7388b1095098fdd9:1:72686982'; 
   var getJsonFromJsonP = function (url, callback) {
     request(url, function (error, response, body) {
       if (!error && response.statusCode == 200) {

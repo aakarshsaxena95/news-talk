@@ -26,8 +26,9 @@ block contains
 				h2 Recent comments
 				.recentcomments(ng-repeat = 'comment in recentcomments')
 					p {{username}} commented 
-						span.commentcontent {{comment.content}} 
+						span.commentcontent "{{comment.contents | commentShortener}}" 
 						|  on 
-						a(href = '{{comment.article.link}}') {{comment.article.title}}.
+						a(href = '{{comment.url}}') {{comment.artTitle}}. 
+						|  {{comment.timestamp | timestampFilter}}
 			.col-md-6
-				h2 Recent votes cast
+				h2 Recommended Articles

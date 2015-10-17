@@ -1,3 +1,7 @@
+/// <reference path="../typings/express/express.d.ts" />
+/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../typings/q/Q.d.ts" />
+
 var express = require('express');
 var passport = require('passport');
 var router = express.Router();
@@ -280,11 +284,26 @@ router.get('/api/readinglistlinks',function(req,res){
 });
 
 router.get('/api/commentsforprofile',function(req,res){
+  var finalObj = [];
+  q.fcall(function(){
   if(req.user){
-    user.comments.forEach(function(comment){
-      
+    req.user.comments.forEach(function(comment){
+      Comment.findOne({_id:comment}).exec(function(err,comm){
+        Article.findOne({_id:comm.article}).exec(function(err,art){
+          finalObj.push({
+            artTitle: art.title,
+            url: '/article/'+art._id.toString(),
+            contents: comm.content,
+            timestamp: comm.timestamp
+          });    
+        if(finalObj.length === req.user.comments.length){
+          res.json(finalObj);
+        }
+        });
+      });
     });
   }
+  });
 });
 /*
 *     TOP ARTICLES
@@ -437,12 +456,14 @@ router.post('/api/article/:id',function(req,res){
   newComment.content = req.body.content;
   newComment.user.id = req.body.id;
   newComment.user.name = req.body.name;
-  newComment.user.profilePicture = req.user.profilePicture;
   newComment.votes.up = [];
   newComment.votes.down = [];
   newComment.comments = [];
   newComment.timestamp = Date.now();
   Article.findByIdAndUpdate(req.params.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
+    console.log(err,numAffected);
+  });
+  User.findByIdAndUpdate(req.body.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
     console.log(err,numAffected);
   });
   newComment.article=req.params.id;
