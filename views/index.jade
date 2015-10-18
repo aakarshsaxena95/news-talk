@@ -16,8 +16,7 @@ block contains
 								
 						p.articleAbstract {{article.abstract}} 
 							a(href='{{article.url}}') Read full story. 
-						p.small {{article.timestamp.substring(11,16) | datefilter}}
-							span(style='float:right') {{article.timestamp.substring(0,10).split('-').reverse() | articleDateFilter}} 
+						p.small {{article.timestamp | timestampFilter}} 
 						br
 						if(user)
 							.buttonsContainer(ng-init='userid = #{JSON.stringify(user._id)}')
@@ -39,7 +38,8 @@ block contains
 										img.profilepicture(ng-src="img/profilePicture/{{comment.user.id}}.jpg" width=50)
 									.col-md-10
 										span.glyphicon.glyphicon-remove.right(ng-show="comment.user.id === userid" ng-click="deleteComment(comment._id)")
-										h5.commentusername {{comment.user.name}}
+										h5.commentusername
+											a(href="/user/{{comment.user.id}}") {{comment.user.name}}
 										p.comment-time {{comment.timestamp | timestampFilter}}
 										p {{comment.content}}
 										span.votes(style="font-size:.85em; font-color:black;")

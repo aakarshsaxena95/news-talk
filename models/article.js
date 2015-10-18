@@ -18,7 +18,7 @@ var articleSchema = new mongoose.Schema({
 		down: [ObjectID]
 	},
 	comments:[ObjectID],
-	timestamp: String
+	timestamp: Date
 },{strict:false});
 
 Article = mongoose.model('Article',articleSchema,'articles');

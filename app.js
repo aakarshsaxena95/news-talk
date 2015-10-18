@@ -112,7 +112,8 @@ app.use(toastr());
 		      	  }
 		          newArticle.votes = {up:[],down:[]};
 		          newArticle.comments = [];
-		          newArticle.timestamp = article.created_date;
+		          newArticle.timestamp = new Date(article.created_date.substring(0,19)+'Z');
+              console.log(article.created_date.substring(0,19)+'.000Z');
 		          newArticle.save(function(err) {
 		            console.log("in save");
 		            if (err){

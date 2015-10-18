@@ -89,6 +89,7 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 
 	$scope.commentForm = function(id,user,contents) {
 		dataService.postComments(id,user,contents).then(function(x){
+			$scope.contrnts = null;
 		$scope.articles.articles.forEach(function(article){
 				if(article._id === id ){
 					article.fetchedComments.push(x);

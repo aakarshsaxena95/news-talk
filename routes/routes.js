@@ -160,7 +160,18 @@ router.get('/myprofile',function(req,res){
   res.render('user',{
     user:req.user
   });
-})
+});
+
+router.get('/user/:userid',function(req,res){
+  if(req.user){
+    if(req.user._id == req.params.userid){
+      res.redirect('/myprofile');
+    }
+    else{
+      res.render('user',{user:req.user});
+    }
+  }
+});
 
 /*
   POST ROUTES

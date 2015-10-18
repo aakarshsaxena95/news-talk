@@ -10,16 +10,16 @@ var relativeDate = function(date){
 	if(date.toDateString() === now.toDateString())
 		return sameDay(date);
 	else if(yearDiff){
-		return date.getDate()+", "+month[date.getMonth()]+" "+date.getYear();
+		return date.getDate()+", "+month[date.getMonth()]+" "+date.getYear()+" at "+(date.toLocaleTimeString().substring(0,5)+date.toLocaleTimeString().substring(8,11));
 	}
 	else if(monDiff){
-		return date.getDate()+" "+month[date.getMonth()];
+		return date.getDate()+" "+month[date.getMonth()]+" at "+(date.toLocaleTimeString().substring(0,5)+date.toLocaleTimeString().substring(8,11));
 	}
 	else if(Math.abs(dateDiff) == 1){
-		return "Yesterday";
+		return "Yesterday at "+(date.toLocaleTimeString().substring(0,5)+date.toLocaleTimeString().substring(8,11));
 	}
 	else{
-		return (-dateDiff)+" days ago";
+		return (-dateDiff)+" days ago at "+(date.toLocaleTimeString().substring(0,5)+date.toLocaleTimeString().substring(8,11));
 	}
 };
 var sameDay = function(date){
