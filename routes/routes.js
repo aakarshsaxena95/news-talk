@@ -461,6 +461,27 @@ router.get('/api/article/comments/:id',function(req,res){
   });
 });
 
+//Request to get a comments on an comment JSON by its ID
+router.get('/api/comments/:id',function(req,res){
+  var commentsArr = {comments : []};
+  Comment.findOne({_id:req.params.id})
+  .exec(function(err,art){
+    art.comments.forEach(function(commentID){
+      Comment.findOne({_id:commentID})
+        .exec(function(err,comm){
+          commentsArr.comments.push(comm);
+          if(commentsArr.comments.length === art.comments.length){
+            commentsArr.comments.sort(function(a,b) {
+              return(a.timestamp - b.timestamp);
+            });
+            res.json(commentsArr);
+          }
+      });
+    });
+  });
+});
+
+
 //Comment Addition
 router.post('/api/article/:id',function(req,res){
   var newComment = new Comment();
@@ -495,6 +516,35 @@ router.delete('/api/delete/comment/:id',function(req,res){
   Comment.findByIdAndRemove(req.params.id);
   console.log('removed');
 });
+
+//Comment on comment
+router.post('/api/article/:id',function(req,res){
+  var newComment = new Comment();
+  newComment.content = req.body.content;
+  newComment.user.id = req.body.id;
+  newComment.user.name = req.body.name;
+  newComment.votes.up = [];
+  newComment.votes.down = [];
+  newComment.comments = [];
+  newComment.timestamp = Date.now();
+  Comment.findByIdAndUpdate(req.params.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
+    console.log(err,numAffected);
+  });
+  User.findByIdAndUpdate(req.body.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
+    console.log(err,numAffected);
+  });
+  newComment.article=req.params.id;
+  newComment.save(function(err,comment){
+    if(err){
+      console.log(err);
+    }
+    else{
+      console.log(newComment);
+      res.send(newComment);
+    }
+  });
+});
+
 
 //Addition to reading List
 router.post('/api/user/add/:uid',function(req,res){

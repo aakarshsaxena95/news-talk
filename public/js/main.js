@@ -1,4 +1,5 @@
 /// <reference path="../../typings/angularjs/angular.d.ts"/>
+/// <reference path="../../typings/jquery/jquery.d.ts" />
 
 
 var app = angular.module('newstalk',['infinite-scroll']);
@@ -98,6 +99,15 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 			});
 		});
 	}
+	
+	$scope.showNestedComments = function(cId){
+		$http.get('/api/comments/'+cId,function(){
+			
+		}).then(function(response){
+			
+		});
+		$('#'+cId+' .col-md-10').after("")
+	};
 }]);
 
 

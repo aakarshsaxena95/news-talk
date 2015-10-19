@@ -33,7 +33,7 @@ block contains
 									img(src='/img/plus.png', width='20px')
 									|    Add to Reading List
 							.commentsContainer(id="{{id}}" ng-show='article.fetchedComments' ng-init='article.fetchedComments=[]')
-								.eachcomment(ng-repeat="comment in article.fetchedComments" ng-show="article.fetchedComments")
+								.eachcomment(ng-repeat="comment in article.fetchedComments" ng-show="article.fetchedComments" id="{{comment._id}}")
 									.col-md-2
 										img.profilepicture(ng-src="img/profilePicture/{{comment.user.id}}.jpg" width=50)
 									.col-md-10
@@ -50,7 +50,8 @@ block contains
 												img(src='/img/down.png', width='15px')
 												|  {{comment.votes.down.length}}
 										span.editreply(ng-show="comment.user.id === userid")
-											| Edit &nbsp;&nbsp;&nbsp;&nbsp;Reply
+											span(ng-click="showNestedCommnets(comment._id)")Reply
+											
 							form(ng-init='user = #{JSON.stringify(user)}' ng-submit='commentForm(id,user,contents);showComments(id);' ng-show='article.clickcomment')
 								textarea(name='contents', ng-model='contents', class="form-control commentform", cols='6')
 								button(type='submit' class="submitbtn") Submit
