@@ -2,9 +2,9 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 
 
-var app = angular.module('newstalk',['infinite-scroll']);
+var app = angular.module('newstalk',['infinite-scroll','toastr']);
 
-app.controller("ArticleController",['$scope','$http','dataService',function($scope,$http,dataService){
+app.controller("ArticleController",['$scope','$http','dataService','toastr',function($scope,$http,dataService,toastr){
 
 	$scope.comments={};
 	$scope.articles = {articles:[]};
@@ -24,6 +24,7 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 
 	$scope.addToReadingList = function(id,userid){
 		dataService.addToReadingList(id,userid);
+		toastr.success("Article added to your reading list!");
 	};
 
 	$scope.removeFromReadingList = function(id,userid){
@@ -52,6 +53,7 @@ app.controller("ArticleController",['$scope','$http','dataService',function($sco
 				article.votes.set = true;
 			}
 		});
+		toastr.success('Upvoted!');
 	}
 
 
@@ -164,4 +166,18 @@ app.filter('commentShortener',function(){
 		}
 		return text;
 	};
+});
+
+
+app.config(function(toastrConfig) {
+  angular.extend(toastrConfig, {
+    allowHtml: true,
+    extendedTimeOut: 1000,
+    messageClass: 'toast-message',
+    progressBar: false,
+    tapToDismiss: true,
+    timeOut: 5000,
+    titleClass: 'toast-title',
+    toastClass: 'toast'
+  });
 });

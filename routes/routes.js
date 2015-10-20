@@ -40,15 +40,11 @@ var isAuthenticated = function (req, res, next) {
   5.   /login             LOGIN               login.jade          Must be logged out
   6.   /article/:id       UNIQUE ARTICLE      article.jade        No
   7.   /logout            LOGOUT              -----N/A-------     Yes
+  8.   /myprofile         USER PROFILE AND OPTIONS      Passowrd change
 -------------------------------------------------------------------------------------------
 
   To be implemented
        ROUTE              MAIN USE                      FEATURES
-  1.   /myprofile         USER PROFILE AND OPTIONS      Passowrd change
-                                                        Display comments
-                                                        Display upvotes
-                                                        Reading List
-  
   2.   /user/:userid      USER RPOFILE OF OTHER USERS   Display comments
                                                         Display upvotes
                                                         Reading List

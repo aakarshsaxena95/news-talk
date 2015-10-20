@@ -70,3 +70,11 @@ h3:before {
   left: 0;
 }
 
+.title-toast{
+	font-family: verdana;
+	font-size:1.3em;
+}
+.toast-message{
+	font-family: Helvetica;
+	font-size:1.2em;
+}

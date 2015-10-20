@@ -113,6 +113,10 @@ hr{
 	opacity: .5;
 	cursor:pointer;
 }
+
+.up-clicked{
+	opacity: 1;
+}
 .commentLink{
 	padding: 1px 10px;
 	font-size:1.5em;
