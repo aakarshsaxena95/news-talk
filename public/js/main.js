@@ -2,7 +2,7 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 
 
-var app = angular.module('newstalk',['infinite-scroll','toastr']);
+var app = angular.module('newstalk',['ngAnimate','infinite-scroll','toastr']);
 
 app.controller("ArticleController",['$scope','$http','dataService','toastr',function($scope,$http,dataService,toastr){
 
@@ -41,19 +41,18 @@ app.controller("ArticleController",['$scope','$http','dataService','toastr',func
 	};
 
 	var upvoteIncrementer = function(id,userid){
-		console.log(id);
 		$scope.articles.articles.forEach(function(article){
-			console.log(article);
+			if(article.votes.up.indexOf(userid)>-1){
+				article.votes.set = true;
+			}
 			if(article && article._id === id && !article.votes.set){
 				if(article.votes.down.indexOf(userid)>-1){
 					article.votes.down.splice(article.votes.down.indexOf(userid));
-					console.log('removed vote');
 				}
 				article.votes.up.push(userid);
 				article.votes.set = true;
 			}
 		});
-		toastr.success('Upvoted!');
 	}
 
 
@@ -63,14 +62,13 @@ app.controller("ArticleController",['$scope','$http','dataService','toastr',func
 	}
 
 	var downvoteIncrementer = function(id,userid){
-		console.log(id);
 		$scope.articles.articles.forEach(function(article){
-			console.log(article);
+			if(article.votes.down.indexOf(userid)>-1){
+				article.votes.set = true;
+			}
 			if(article && article._id === id && !article.votes.set){
-				console.log(article);
 				if(userid in article.votes.up){
 					article.votes.up.splice(article.votes.up.indexOf(userid));
-					console.log('removed vote');
 				}
 				article.votes.down.push(userid);
 				article.votes.set = true;
@@ -86,7 +84,6 @@ app.controller("ArticleController",['$scope','$http','dataService','toastr',func
 					article.fetchedComments = data.comments;
 				}
 			});
-			console.log($scope.fetchedComments);
 		});
 	}
 
@@ -96,7 +93,6 @@ app.controller("ArticleController",['$scope','$http','dataService','toastr',func
 		$scope.articles.articles.forEach(function(article){
 				if(article._id === id ){
 					article.fetchedComments.push(x);
-					console.log(article.fetchedComments);
 				}
 			});
 		});
@@ -144,9 +140,7 @@ app.filter('datefilter',function(){
 app.filter('timestampFilter',function(){
 	return function(text){
 			var day = new Date(text.substring(0,19)+'Z');
-			console.log(text.substring(0,19)+'Z');
 			var returned = relativeDate(day);
-			console.log(returned);
 			return returned;
 		};
 	});
@@ -161,7 +155,6 @@ app.filter('articleDateFilter',function(){
 app.filter('commentShortener',function(){
 	return function(text){
 		if(text.length>35){
-			console.log(text);
 			return(text.substring(0,35)+"... ");
 		}
 		return text;
