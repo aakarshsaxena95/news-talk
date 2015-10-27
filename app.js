@@ -138,8 +138,13 @@ app.use(toastr());
 
 //Routes
 var routes = require('./routes/routes.js');
-var users = require('./routes/users');
+var users = require('./routes/users.js');
+var comments = require('./routes/comments.js');
+var articles = require('./routes/articles.js')
 app.use('/',routes);
+app.use('/',articles);
+app.use('/',comments);
+app.use('/',users);
 
 app.listen(8000,function(){
 	console.log("Running the server on port "+3000);

@@ -8,7 +8,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var q = require('q');
 var ObjectID = require('mongoose').Schema.ObjectId;
-
+ 
 /*
 *     Schemas
 */
@@ -169,25 +169,6 @@ router.get('/user/:userid',function(req,res){
   }
 });
 
-/*
-  POST ROUTES
-  Redirects
-*/
-
-//Handle post request to register the user
-router.post('/register', passport.authenticate('signup',{
-	successRedirect: '/',
-	failureRedirect: '/login'
-}));
-
-//Route to authenticate the user
-router.post('/login', passport.authenticate('login', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true
-}));
- 
-
 
 
 /*
@@ -231,87 +212,8 @@ router.post('/login', passport.authenticate('login', {
 */
           
 
-/*
-*       LATEST NEWS FETCH   (10 PER PAGE)
-*       Request to get the articles in groups of 10 starting from the latest determined by 
-*       the page variable (0 for the first batch)
-*/
-router.get('/api/articles/:page',function(req,res){
-  var articleObj = {};
-  Article.find({})
-         .limit(10)
-         .skip(req.params.page*10)
-         .sort({timestamp:-1})
-         .exec(function(err,arts){
-          articleObj.articles = arts;
-            if (arts.length<10){
-              articleObj.reachedEnd = true;
-            }
-            res.json(articleObj);
-         });
-});
 
 
-
-/*
-*     Fetch data for reading list
-*/
-router.get('/api/readinglist/:page',function(req,res){
-  var articleArr = {articles:[]};
-  req.user.readingList.forEach(function(articleID){
-    Article.findOne({_id:articleID})
-    .exec(function(err,art){
-      articleArr.articles.push(art);
-      if(articleArr.articles.length===req.user.readingList.length){
-        res.json(articleArr);   
-      }
-   });
-  });
-});
-
-/*
- *    Fetch titles and links of reading list 
- */
-router.get('/api/readinglistlinks',function(req,res){
-  var articleArr = {articles:[]};
-  if(req.user){
-      req.user.readingList.forEach(function(articleID){
-        Article.findOne({_id:articleID})
-        .exec(function(err,art){
-          if(art){
-            articleArr.articles.push({url: art.url, title: art.title});
-            if(articleArr.articles.length===req.user.readingList.length){
-              res.json(articleArr);
-            }   
-          }
-         });
-      });
-  }
-  else res.send("User not logged in");
-});
-
-router.get('/api/commentsforprofile',function(req,res){
-  var finalObj = [];
-  q.fcall(function(){
-  if(req.user){
-    req.user.comments.forEach(function(comment){
-      Comment.findOne({_id:comment}).exec(function(err,comm){
-        Article.findOne({_id:comm.article}).exec(function(err,art){
-          finalObj.push({
-            artTitle: art.title,
-            url: '/article/'+art._id.toString(),
-            contents: comm.content,
-            timestamp: comm.timestamp
-          });    
-        if(finalObj.length === req.user.comments.length){
-          res.json(finalObj);
-        }
-        });
-      });
-    });
-  }
-  });
-});
 /*
 *     TOP ARTICLES
 *     By Day, month and week
@@ -428,165 +330,5 @@ router.get('/api/top/week/:page',function(req,res){
 //             res.json(articleObj);
 //          });
 // });
-
-//Request to get an article JSON by its ID
-router.get('/api/article/:id',function(req,res){
-  Article.findOne({_id:req.params.id})
-  .exec(function(err,art){
-    res.json(art);
-  });
-});
-
-//Request to get a comments on an article JSON by its ID
-router.get('/api/article/comments/:id',function(req,res){
-  var commentsArr = {comments : []};
-  Article.findOne({_id:req.params.id})
-  .exec(function(err,art){
-    art.comments.forEach(function(commentID){
-      Comment.findOne({_id:commentID})
-        .exec(function(err,comm){
-          commentsArr.comments.push(comm);
-          if(commentsArr.comments.length === art.comments.length){
-            commentsArr.comments.sort(function(a,b) {
-              return(a.timestamp - b.timestamp);
-            });
-            res.json(commentsArr);
-          }
-      });
-    });
-  });
-});
-
-//Request to get a comments on an comment JSON by its ID
-router.get('/api/comments/:id',function(req,res){
-  var commentsArr = {comments : []};
-  Comment.findOne({_id:req.params.id})
-  .exec(function(err,art){
-    art.comments.forEach(function(commentID){
-      Comment.findOne({_id:commentID})
-        .exec(function(err,comm){
-          commentsArr.comments.push(comm);
-          if(commentsArr.comments.length === art.comments.length){
-            commentsArr.comments.sort(function(a,b) {
-              return(a.timestamp - b.timestamp);
-            });
-            res.json(commentsArr);
-          }
-      });
-    });
-  });
-});
-
-
-//Comment Addition
-router.post('/api/article/:id',function(req,res){
-  var newComment = new Comment();
-  newComment.content = req.body.content;
-  newComment.user.id = req.body.id;
-  newComment.user.name = req.body.name;
-  newComment.votes.up = [];
-  newComment.votes.down = [];
-  newComment.comments = [];
-  newComment.timestamp = Date.now();
-  Article.findByIdAndUpdate(req.params.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
-    console.log(err,numAffected);
-  });
-  User.findByIdAndUpdate(req.body.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
-    console.log(err,numAffected);
-  });
-  newComment.article=req.params.id;
-  newComment.save(function(err,comment){
-    if(err){
-      console.log(err);
-    }
-    else{
-      console.log(newComment);
-      res.send(newComment);
-    }
-  });
-});
-
-//comment deletion
-router.delete('/api/delete/comment/:id',function(req,res){
-  if(req.user)
-  Comment.findByIdAndRemove(req.params.id);
-  console.log('removed');
-});
-
-//Comment on comment
-router.post('/api/article/:id',function(req,res){
-  var newComment = new Comment();
-  newComment.content = req.body.content;
-  newComment.user.id = req.body.id;
-  newComment.user.name = req.body.name;
-  newComment.votes.up = [];
-  newComment.votes.down = [];
-  newComment.comments = [];
-  newComment.timestamp = Date.now();
-  Comment.findByIdAndUpdate(req.params.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
-    console.log(err,numAffected);
-  });
-  User.findByIdAndUpdate(req.body.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
-    console.log(err,numAffected);
-  });
-  newComment.article=req.params.id;
-  newComment.save(function(err,comment){
-    if(err){
-      console.log(err);
-    }
-    else{
-      console.log(newComment);
-      res.send(newComment);
-    }
-  });
-});
-
-
-//Addition to reading List
-router.post('/api/user/add/:uid',function(req,res){
-  console.log(req.body);
-  User.update({
-    _id:req.body.user
-  },
-  {$addToSet:{readingList:req.body.id}},null,function(err,numAffected){
-    console.log(numAffected);
-  });
-});
-
-//Removal from reading list
-router.post('/api/user/rem/:uid',function(req,res){
-  console.log(req.body.id);
-  User.update({
-    _id:req.user._id
-  },
-  {$pull:{readingList:req.body.id}},null,function(err,numAffected){
-    console.log(numAffected);
-  });
-});
-
-
-/*
-*     VOTING
-*/
-
-
-/*
-*     Upvote
-*/
-router.post('/api/article/up/:id',function(req,res){
-  Article.findByIdAndUpdate(req.params.id, {$pull:{"votes.down":(req.user.id)}}, null,function(asdf){console.log(asdf);});
-  Article.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
-  res.send('Updated');  
-});
-
-/*
-*     Downvote
-*/
-router.post('/api/article/down/:id',function(req,res){
-  Article.findByIdAndUpdate(req.params.id, {$pull:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
-  Article.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.down":(req.user.id)}}, null,function(asdf){console.log(asdf);});
-  res.send('Updated');  
-});
-
 
 module.exports = router;
