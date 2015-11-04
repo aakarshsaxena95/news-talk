@@ -53,8 +53,7 @@ app.controller("ArticleController",['$scope','$http','dataService','toastr',func
 				article.votes.set = true;
 			}
 		});
-	}
-
+	};	
 
 	$scope.downvote = function(id,userid){
 		downvoteIncrementer(id,userid);
@@ -74,7 +73,7 @@ app.controller("ArticleController",['$scope','$http','dataService','toastr',func
 				article.votes.set = true;
 			}
 		});
-	}
+	};
 
 
 	$scope.showComments = function(id){

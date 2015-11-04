@@ -239,21 +239,7 @@ router.get('/user/:userid',function(req,res){
 
 //WEEK
 router.get('/api/top/week/:page',function(req,res){
-//      var articleObj = {};
-//      Article.find({})
-//         .limit(10)
-//         .skip(req.params.page*10)
-//         
-//         .sort({votecount:-1})
-//         .exec(function(err,arts){
-//          articleObj.articles = arts;
-//            if (arts.length<10){
-//              articleObj.reachedEnd = true;
-//            }
-//            res.json(articleObj);
-//         });
-         
-         Article.aggregate(
+   Article.aggregate(
     [
         { "$project": {
             "timestamp": 1,
