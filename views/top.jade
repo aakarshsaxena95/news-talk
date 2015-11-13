@@ -1,4 +1,110 @@
 extends layout
 
 block contains
-	.tabs(ng-controller="tabscontroller")
+	script(src="/js/controllers/topStoriesCtrl.js")
+	.container(ng-controller="topStoriesController")
+		.col-sm-3
+			h2(style="font-size:1.75em;") Top stories by
+			ul.list-unstyled(ng-init = "changeState(0)")
+				a(href="#")
+					li(ng-click="changeState(0)") 
+						h4 Day
+				a(href="#")
+					li(ng-click="changeState(1)") 
+						h4 Week
+				a(href="#")
+					li(ng-click="changeState(2)")
+						h4 Month
+				a(href="#")
+					li(ng-click="changeState(3)") 
+						h4 All Time
+		.col-sm-9
+			h1(style="font-family:brawler") Top 10 stories of {{timeLimitHeader}}
+			.row(ng-repeat="article in content[timeLimit].articles" ng-show='content[timeLimit]')
+				.articleWrapper(ng-init = 'id = article._id')
+					center
+						h5 {{article.section}} {{reachedEnd}}
+					h2.articleTitle {{article.title}}
+					.row.imgWrapper(ng-show='{{article.image.url}}')
+						.col-md-8.articleImage
+							img(src='{{article.image.url}}', width='100%')
+						.col-md-4.articleCaption
+							p {{article.image.caption}}
+							
+					p.articleAbstract {{article.abstract}} 
+						a(href='{{article.url}}') Read full story. 
+					p.small {{article.timestamp | timestampFilter}} 
+					br
+					if(user)
+						.buttonsContainer(ng-init='userid = #{JSON.stringify(user._id)}')
+							span.up(ng-click='upvote(id,userid)' ng-class='{"up-clicked":article.votes.up.indexOf(userid)>=0}')
+								img(src='/img/up.png', width='20px')
+								|    {{article.votes.up.length}}
+							span.down(ng-click='downvote(id,userid)' ng-class='{"up-clicked":article.votes.down.indexOf(userid)>=0}')
+								img(src='/img/down.png', width='20px')
+								|    {{article.votes.down.length}}
+							span.commentLink(ng-click='showComments(id); article.clickcomment = true')
+								img(src='/img/comment.png', width='20px')
+								|    Comments
+							span.readingListLink( ng-click="addToReadingList(id,userid)")
+								img(src='/img/plus.png', width='20px')
+								|    Add to Reading List
+						.commentsContainer(id="{{id}}" ng-show='article.fetchedComments' ng-init='article.fetchedComments=[]')
+							.eachcomment(ng-repeat="comment in article.fetchedComments" ng-show="article.fetchedComments" id="{{comment._id}}")
+								.col-md-2
+									img.profilepicture(ng-src="img/profilePicture/{{comment.user.id}}.jpg" width=50)
+								.col-md-10
+									span.glyphicon.glyphicon-remove.right(ng-show="comment.user.id === userid" ng-click="deleteComment(comment._id,id)")
+									h5.commentusername
+										a(href="/user/{{comment.user.id}}") {{comment.user.name}}
+									p.comment-time {{comment.timestamp | timestampFilter}}
+									p {{comment.content}}
+									span.votes(style="font-size:.85em; font-color:black;")
+										span.up
+											img(src='/img/up.png', width='15px')
+											|  {{comment.votes.up.length}}
+										span.down
+											img(src='/img/down.png', width='15px')
+											|  {{comment.votes.down.length}}
+									span.editreply(ng-show="comment.user.id === userid")
+										
+										
+						form(ng-init='user = #{JSON.stringify(user)}' ng-submit='commentForm(id,user,contents);showComments(id);' ng-show='article.clickcomment')
+							textarea(name='contents', ng-model='contents', class="form-control commentform", cols='6')
+							button(type='submit' class="submitbtn") Submit
+					else
+						.buttonsContainer
+							span.up(ng-click='clk = true')
+								img(src='/img/up.png', width='20px')
+								|    {{article.votes.up.length}}
+							span.down(ng-click='clk = true')
+								img(src='/img/down.png', width='20px')
+								|    {{article.votes.down.length}}
+							span.commentLink(ng-click='showComments(id); clk=true;')
+								img(src='/img/comment.png', width='20px')
+								|    Comments
+							span.readingListLink( ng-click="clk = true")
+								img(src='/img/plus.png', width='20px')
+								|    Add to Reading List
+						.commentsContainer(id="{{id}}" ng-show='article.fetchedComments')
+							.eachcomment(ng-repeat="comment in article.fetchedComments" ng-show="article.fetchedComments")
+								.col-md-2
+									img.profilepicture(ng-src="img/profilePicture/{{comment.user.id}}.jpg" width=50)
+								.col-md-10
+									span.glyphicon.glyphicon-remove.right
+									h5.commentusername {{comment.user.name}}
+									p.comment-time {{comment.timestamp | timestampFilter}}
+									p {{comment.content}}
+									span.votes(style="font-size:.85em; font-color:black;")
+										span.up
+											img(src='/img/up.png', width='15px')
+											|  {{comment.votes.up.length}}
+										span.down
+											img(src='/img/down.png', width='15px')
+											|  {{comment.votes.down.length}}
+						br
+						p(ng-show='clk')
+							a(href="/login") Login
+							|  or 
+							a(href="/register") Register
+							|  to vote or comment.

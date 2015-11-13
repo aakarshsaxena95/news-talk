@@ -86,6 +86,7 @@ router.get('/api/commentsforprofile',function(req,res){
   if(req.user){
     req.user.comments.forEach(function(comment){
       Comment.findOne({_id:comment}).exec(function(err,comm){
+        console.log(comm);
         Article.findOne({_id:comm.article}).exec(function(err,art){
           finalObj.push({
             artTitle: art.title,

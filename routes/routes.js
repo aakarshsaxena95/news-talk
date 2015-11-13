@@ -92,7 +92,9 @@ router.get('/',function(req,res){
 *     Route to get TOP STORIES
 */
 router.get('/top',function(req,res){
-  res.render('top');
+  res.render('top',{
+		user:req.user
+	});
 });
 
 

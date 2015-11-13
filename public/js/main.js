@@ -36,8 +36,8 @@ app.controller("ArticleController",['$scope','$http','dataService','toastr',func
 		dataService.upvote(id);
 	};
 	
-	$scope.deleteComment = function(commentId){
-		dataService.deleteComment(commentId);
+	$scope.deleteComment = function(commentId,articleId){
+		dataService.deleteComment(commentId,articleId);
 	};
 
 	var upvoteIncrementer = function(id,userid){

@@ -24,8 +24,8 @@
 			.then(sendResponse);
 		}
 		
-		function deleteComment(commentId){
-			$http.delete('/api/delete/comment/'+commentId)
+		function deleteComment(commentId,articleId){
+			$http.delete('/api/delete/comment/'+commentId+'/'+articleId)
 				.then(function(response){console.log(response);});
 		}
 		

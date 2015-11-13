@@ -37,7 +37,7 @@ block contains
 									.col-md-2
 										img.profilepicture(ng-src="img/profilePicture/{{comment.user.id}}.jpg" width=50)
 									.col-md-10
-										span.glyphicon.glyphicon-remove.right(ng-show="comment.user.id === userid" ng-click="deleteComment(comment._id)")
+										span.glyphicon.glyphicon-remove.right(ng-show="comment.user.id === userid" ng-click="deleteComment(comment._id,id)")
 										h5.commentusername
 											a(href="/user/{{comment.user.id}}") {{comment.user.name}}
 										p.comment-time {{comment.timestamp | timestampFilter}}

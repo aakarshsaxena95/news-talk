@@ -74,66 +74,34 @@ router.post('/api/article/:id',function(req,res){
   newComment.votes.down = [];
   newComment.comments = [];
   newComment.timestamp = Date.now();
-  Article.findByIdAndUpdate(req.params.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
-    console.log(err,numAffected);
-  });
-  User.findByIdAndUpdate(req.body.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
-    console.log(err,numAffected);
-  });
+  Article.findByIdAndUpdate(req.params.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){});
+  User.findByIdAndUpdate(req.body.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){});
   newComment.article=req.params.id;
   newComment.save(function(err,comment){
     if(err){
       console.log(err);
     }
     else{
-      console.log(newComment);
       res.send(newComment);
     }
   });
 });
 
 //comment deletion
-router.delete('/api/delete/comment/:id',function(req,res){
+router.delete('/api/delete/comment/:commentId/:articleId',function(req,res){
+  console.log(req.user.id);
   if(req.user)
-  Comment.findByIdAndRemove(req.params.id, function(err,offer){
+  Comment.findByIdAndRemove(req.params.commentId, function(err,offer){
     if(err) console.log(err);
     else console.log(offer);
   });
-  User.findByIdAndUpdate(req.body.id,{$pull:{comments:ObjectID(req.params.id)}},null,function(err,numAffected){
+  User.findByIdAndUpdate(req.user.id,{$pull:{comments:mongoose.Schema.ObjectId(req.params.commentId)}},null,function(err,numAffected){
     console.log(err,numAffected);
   });
-  Article.findByIdAndUpdate(req.body.id,{$pull:{comments:ObjectID(req.params.id)}},null,function(err,numAffected){
+  Article.findByIdAndUpdate(req.params.articleId,{$pull:{comments:mongoose.Schema.ObjectId(req.params.commentId)}},null,function(err,numAffected){
     console.log(err,numAffected);
   });
   console.log('removed',req.params.id);
-});
-
-//Comment on comment
-router.post('/api/article/:id',function(req,res){
-  var newComment = new Comment();
-  newComment.content = req.body.content;
-  newComment.user.id = req.body.id;
-  newComment.user.name = req.body.name;
-  newComment.votes.up = [];
-  newComment.votes.down = [];
-  newComment.comments = [];
-  newComment.timestamp = Date.now();
-  Comment.findByIdAndUpdate(req.params.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
-    console.log(err,numAffected);
-  });
-  User.findByIdAndUpdate(req.body.id,{$addToSet:{comments:newComment._id}},null,function(err,numAffected){
-    console.log(err,numAffected);
-  });
-  newComment.article=req.params.id;
-  newComment.save(function(err,comment){
-    if(err){
-      console.log(err);
-    }
-    else{
-      console.log(newComment);
-      res.send(newComment);
-    }
-  });
 });
 
 

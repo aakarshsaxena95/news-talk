@@ -21,5 +21,5 @@ var articleSchema = new mongoose.Schema({
 	timestamp: Date
 },{strict:false});
 
-Article = mongoose.model('Article',articleSchema,'articles');
+var Article = mongoose.model('Article',articleSchema,'articles');
 module.exports = Article;
