@@ -40,14 +40,14 @@ var isAuthenticated = function (req, res, next) {
   5.   /login             LOGIN               login.jade          Must be logged out
   6.   /article/:id       UNIQUE ARTICLE      article.jade        No
   7.   /logout            LOGOUT              -----N/A-------     Yes
-  8.   /myprofile         USER PROFILE AND OPTIONS      Passowrd change
+  8.   /myprofile         USER PROFILE AND OPTIONS                Passowrd change
+  9.   /user/:userid      USER RPOFILE OF OTHER USERS             Display comments
+                                                                  Display upvotes
+                                                                  Reading List
 -------------------------------------------------------------------------------------------
 
   To be implemented
        ROUTE              MAIN USE                      FEATURES
-  2.   /user/:userid      USER RPOFILE OF OTHER USERS   Display comments
-                                                        Display upvotes
-                                                        Reading List
   
   3.   /about             ABOUT PAGE OF THE APP
 
@@ -62,20 +62,9 @@ var isAuthenticated = function (req, res, next) {
 
 ---------------------------------------------------------------------------------------------------
 
-COMMON PAGES
-    
-    1. Upvotes and downvotes(When doing either, check if user already up or downed it. if yes proceed accordingly)
+COMMON PAGES    
     2. Comment edit and delete
     3. Comment:-  vote & reply (ng-show Show Comments only if comments are actually there)
-    4. 
-
-
-
-  Others
-  TWITTER FEED -------------------------------------------------------------------------------
-  FACEBOOK GRAPH API--------------------------------------------------------------------------
-  SENTIMENT ANALYSIS--------------------------------------------------------------------------
-  RECOMMENDATION SYSTEM FOR USERS-------------------------------------------------------------
 */
 
 /*
@@ -97,6 +86,14 @@ router.get('/top',function(req,res){
 	});
 });
 
+/*
+ *      Route to get tags page.
+ */
+router.get('/tags',function(req,res){
+  res.render('tags',{
+		user:req.user
+	});
+});
 
 /*
 *     Route to get READING LIST
@@ -184,6 +181,11 @@ router.get('/user/:userid',function(req,res){
           1.   /api/articles/:page          10 ARTICLES PER PAGE          No
           2.   /api/readinglist/:page       10 ARTICLES PER PAGE          Yes
           3.   /api/article/:id             1 ARTICLE SENT                No     Send comments as well
+          4.   /api/top/
+              * Day
+              * Month
+              * Year
+              * All time
            
       b) COMMENTS
           GET
@@ -198,125 +200,10 @@ router.get('/user/:userid',function(req,res){
   TO BE IMPLEMENTED
       ARTICLES
           Get articles by tags
-          Get articles by top
-              * Day
-              * Month
-              * Year
-              * All time
-          Search and return best matched articles
-
       COMMENTS
           GET, POST, DELETE and EDIT  comments on comments
-      
-
       USERS
           GET other users info w/o passwords
 */
           
-
-
-
-/*
-*     TOP ARTICLES
-*     By Day, month and week
-*     
-*     //TODO: insert code to modify the dates
-*
-*/
-
-// //DAY
-// router.get('/api/top/day/:page',function(req,res){
-//       Article.find({})
-//          .limit(10)
-//          .skip(req.params.page*10)
-//          .sort({votes.up:-1})
-//          .exec(function(err,arts){
-//           articleObj.articles = arts;
-//             if (arts.length<10){
-//               articleObj.reachedEnd = true;
-//             }
-//             res.json(articleObj);
-//          });
-// });
-
-//WEEK
-router.get('/api/top/week/:page',function(req,res){
-   Article.aggregate(
-    [
-        { "$project": {
-            "timestamp": 1,
-            "url": 1,
-            "abstract": 1,
-            "title": 1,
-            "section": 1,
-            "comments": 1,
-            "votes": 1,
-            "image": 1,
-            "voteCount": { 
-                "$subtract": [
-                    { "$size": "$votes.up" },
-                    { "$size": "$votes.down" }
-                ]
-            }
-        }},
-        { "$sort": { "voteCount": -1 } },
-        { "$skip": req.params.page*10 },
-        { "$limit": 10 },
-    ],
-    function(err,results) {
-        if(results.length < 10){
-          results.reachedEnd = true;
-        }
-        res.json(results);
-    }
-);
-});
-
-// //MONTH
-// router.get('/api/top/month/:page',function(req,res){
-//         Article.find({})
-//          .limit(10)
-//          .skip(req.params.page*10)
-//          .sort({votes.up:-1})
-//          .exec(function(err,arts){
-//           articleObj.articles = arts;
-//             if (arts.length<10){
-//               articleObj.reachedEnd = true;
-//             }
-//             res.json(articleObj);
-//          });
-// });
-
-//ALL-TIME
-// router.get('/api/top/:page',function(req,res){
-//         Article.find({})
-//          .limit(10)
-//          .skip(req.params.page*10)
-//          .sort({votes.up:-1})
-//          .exec(function(err,arts){
-//           articleObj.articles = arts;
-//             if (arts.length<10){
-//               articleObj.reachedEnd = true;
-//             }
-//             res.json(articleObj);
-//          });
-// });
-
-
-// //Fetch articles by tags
-// router.get('/api/articles/:page',function(req,res){
-//   var articleObj = {};
-//   Article.find({})
-//          .limit(10)
-//          .skip(req.params.page*10)
-//          .sort({timestamp:-1})
-//          .exec(function(err,arts){
-//           articleObj.articles = arts;
-//             if (arts.length<10){
-//               articleObj.reachedEnd = true;
-//             }
-//             res.json(articleObj);
-//          });
-// });
-
 module.exports = router;

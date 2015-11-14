@@ -2,7 +2,7 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 
 
-var app = angular.module('newstalk',['ngAnimate','infinite-scroll','toastr']);
+var app = angular.module('newstalk',['ngAnimate','infinite-scroll','toastr','angular-jqcloud']);
 
 app.controller("ArticleController",['$scope','$http','dataService','toastr',function($scope,$http,dataService,toastr){
 

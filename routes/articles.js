@@ -194,6 +194,20 @@ router.get('/api/top/all/:page',function(req,res){
 );
 });
 
+
+/*
+*   ARTICLES BY TAGS.
+*/
+//Tag list for visualization
+router.get('/api/tags/list',function(req,res){
+  Article.aggregate({$group:{_id:"$section",count: { $sum: 1 }}},function(err,results){
+    res.json(results);
+  });
+});
+
+
+
+
 //Request to get an article JSON by its ID
 router.get('/api/article/:id',function(req,res){
   Article.findOne({_id:req.params.id})
