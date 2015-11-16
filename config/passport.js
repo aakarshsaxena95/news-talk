@@ -32,11 +32,7 @@ module.exports = function(passport) {
         });
     });
 
-    var isValidPassword = function(user, password){
-        console.log(password,user,user.password);
-  return bCrypt.compareSync(password, user.password);
-}
-
+    //Login Strategy declaration
     passport.use('login', new LocalStrategy({passReqToCallback : true},function(req, username, password, done) { 
         // check in mongo if a user with username exists or not
         console.log(username,password);
@@ -82,7 +78,8 @@ module.exports = function(passport) {
             else {
             // create the user
               var newUser = new User();
-              // set the user's local credentials
+              
+              //Save profile picture.
               fs.readFile(req.files.profilePicture.path, function (err, data) {
                 console.log(req.files.profilePicture);
                 var newPath = "/home/ayushgp/learning/webdev/news-talk/public/img/profilePicture/"+newUser._id+".jpg";
@@ -91,12 +88,13 @@ module.exports = function(passport) {
                 newUser.profilePicture = relPath;      
                 console.log(newUser,"YOYLO");
                 newUser.name = name;
+              
               newUser.password = password;
               newUser.email = req.param('email');
               newUser.votes = {up:[],down:[]};
               newUser.comments = [];
               newUser.readingList = [];
-              // save the user
+              
               newUser.save(function(err) {
                 if (err){
                   console.log('Error in Saving user: '+err);  

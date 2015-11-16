@@ -22,13 +22,10 @@ block contains
 		br
 		br
 		.row
-			.col-md-6
-				h2 Recent comments
-				.recentcomments(ng-repeat = 'comment in recentcomments')
-					p {{username}} commented 
-						span.commentcontent "{{comment.contents | commentShortener}}" 
-						|  on 
-						a(href = '{{comment.url}}') {{comment.artTitle}}. 
-						|  {{comment.timestamp | timestampFilter}}
-			.col-md-6
-				h2 Recommended Articles
+			h2 Recent comments
+			.recentcomments(ng-repeat = 'comment in recentcomments')
+				p {{username}} commented 
+					span.commentcontent "{{comment.contents | commentShortener}}" 
+					|  on 
+					a(href = '{{comment.url}}') {{comment.artTitle}}. 
+					|  {{comment.timestamp | timestampFilter}}

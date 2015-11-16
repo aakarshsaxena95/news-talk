@@ -41,6 +41,9 @@ body{
 
 #footer{
 	background-color:#ececec;
+	margin-top:15px;
+	padding-top:15px;
+	padding-bottom:15px;
 }
 
 /*For line on both sides*/

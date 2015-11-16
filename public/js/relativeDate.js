@@ -1,3 +1,4 @@
+// A very simple function to convert any given date to a relative date. 
 var relativeDate = function(date){
 	var month = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
 	var now = new Date();

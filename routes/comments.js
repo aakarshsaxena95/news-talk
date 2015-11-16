@@ -16,7 +16,7 @@ var Article = require('../models/article.js');
 var User = require('../models/user.js');
 var Comment = require('../models/comment.js');
 
-//function to check if user is logged in.
+//Function to check if user is logged in.
 var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated())
     return next();
@@ -63,7 +63,6 @@ router.get('/api/comments/:id',function(req,res){
   });
 });
 
-
 //Comment Addition
 router.post('/api/article/:id',function(req,res){
   var newComment = new Comment();
@@ -104,5 +103,23 @@ router.delete('/api/delete/comment/:commentId/:articleId',function(req,res){
   console.log('removed',req.params.id);
 });
 
+//Comment upvote
+router.post('/api/comment/up/:id',function(req,res){
+  Comment.findByIdAndUpdate(req.params.id, {$pull:{"votes.down":(req.user.id)}}, null,function(asdf){console.log(asdf);});
+  Comment.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
+  User.findByIdAndUpdate(req.user.id, {$pull:{"votes.down":(req.params.id)}}, null,function(asdf){console.log(asdf);});
+  User.findByIdAndUpdate(req.user.id, {$addToSet:{"votes.up":(req.params.id)}}, null,function(asdf){console.log(asdf);});
+  res.send('Updated');  
+});
+
+
+//Comment downvote
+router.post('/api/article/down/:id',function(req,res){
+  Comment.findByIdAndUpdate(req.params.id, {$pull:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
+  Comment.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.down":(req.user.id)}}, null,function(asdf){console.log(asdf);});
+  User.findByIdAndUpdate(req.user.id, {$pull:{"votes.up":(req.params.id)}}, null,function(asdf){console.log(asdf);});
+  User.findByIdAndUpdate(req.user.id, {$addToSet:{"votes.down":(req.params.id)}}, null,function(asdf){console.log(asdf);});
+  res.send('Updated');  
+});
 
 module.exports = router;

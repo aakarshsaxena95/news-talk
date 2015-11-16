@@ -1,6 +1,7 @@
 /// <reference path="./typings/express/express.d.ts" />
 /// <reference path="./typings/node/node.d.ts" />
 
+//Main dependencies
 var request = require('request');
 var express = require('express');
 var http = require('http');
@@ -8,7 +9,7 @@ var mongoose = require('mongoose');
 var path = require('path');
 var expressSession = require('express-session');
 
-//Others
+//Other middleware for express
 var flash = require('connect-flash');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -27,7 +28,7 @@ var Article = require('./models/article.js');
 var User = require('./models/user.js');
 var Comment = require('./models/comment.js');
 
-//Mongoose connect
+//Database connection
 var m = mongoose.connect('mongodb://localhost/news-talk');
 mongoose.connection.on('open',function(){
 	mongoose.connection.db.listCollections(function (err, names) {
@@ -51,20 +52,18 @@ app.use(require('express-session')({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: false
-}));
+})); 
+
+//Initialize login and signup system
 app.use(passport.initialize());
 app.use(passport.session());
+
+//Declare the folder that'll be available through the website statically
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(toastr());
 
-
-
-
-
-
-
-
-  var url = 'http://api.nytimes.com/svc/topstories/v1/home.jsonp?api-key=c6d1eca37b6784fb7388b1095098fdd9:1:72686982'; 
+  var url = 'http://api.nytimes.com/svc/topstories/v1/home.jsonp?api-key=c6d1eca37b6784fb7388b1095098fdd9:1:72686982';
+   
   var getJsonFromJsonP = function (url, callback) {
     request(url, function (error, response, body) {
       if (!error && response.statusCode == 200) {
@@ -84,9 +83,15 @@ app.use(toastr());
       else{
         callback(error);
       }
-    })
-  }
-  getJsonFromJsonP(url, function (err, data) {
+    });
+    //Calls the function every 60 seconds.
+    setTimeout(function(){
+     getJsonFromJsonP(url,saveArticleCallback); 
+    },60000);
+  };
+  
+  //Helper callback that saves new articles(if any).
+  var saveArticleCallback =  function (err, data) {
   	if(data){
 	    data.results.forEach(function(article){
 	      Article.findOne({title:article.title},function(err,found){
@@ -94,10 +99,8 @@ app.use(toastr());
 	          console.log('Error in finding article: '+err);
 	          return done(err);
 	        }
-	        if (found) {
-	        	console.log("exists");
-	        } 
-	        else{
+	        if (!found) {
+            //Construct and add article if not found.
 		          var newArticle = new Article();
 		          newArticle.section = article.section;
 		          newArticle.title = article.title;
@@ -106,7 +109,6 @@ app.use(toastr());
 		          newArticle.images = [];
 		          if(article.multimedia){
 		          	var image = article.multimedia[article.multimedia.length-1]
-		          	console.log(image);
 		            newArticle.image.url = image.url;
 		            newArticle.image.caption = image.caption;
 		      	  }
@@ -115,7 +117,6 @@ app.use(toastr());
 		          newArticle.timestamp = new Date(article.created_date.substring(0,19)+'Z');
               console.log(article.created_date.substring(0,19)+'.000Z');
 		          newArticle.save(function(err) {
-		            console.log("in save");
 		            if (err){
 		              console.log('Error in Saving article: '+err);  
 		              throw err;  
@@ -125,18 +126,13 @@ app.use(toastr());
 	    });
 		});
 	}
-});
+};
+
+//One time function call. Then it is called every 60 seconds from within it. Not a recursive call though, so that stack is never overflowed.
+getJsonFromJsonP(url,saveArticleCallback);
 
 
-
-
-
-
-
-
-
-
-//Routes
+//Routes importing
 var routes = require('./routes/routes.js');
 var users = require('./routes/users.js');
 var comments = require('./routes/comments.js');

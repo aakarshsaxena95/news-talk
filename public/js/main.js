@@ -151,6 +151,7 @@ app.filter('articleDateFilter',function(){
 	};
 });
 
+//Filter for profile page to show shortened comments
 app.filter('commentShortener',function(){
 	return function(text){
 		if(text.length>35){
@@ -160,7 +161,7 @@ app.filter('commentShortener',function(){
 	};
 });
 
-
+//Toastr configuration
 app.config(function(toastrConfig) {
   angular.extend(toastrConfig, {
     allowHtml: true,
