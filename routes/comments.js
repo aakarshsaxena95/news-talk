@@ -33,6 +33,8 @@ router.get('/api/article/comments/:id',function(req,res){
         .exec(function(err,comm){
           commentsArr.comments.push(comm);
           if(commentsArr.comments.length === art.comments.length){
+               var i = commentsArr.comments.length;
+               while( i-- ) if(commentsArr.comments[i] === null ) commentsArr.comments.splice(i,1);
             commentsArr.comments.sort(function(a,b) {
               return(a.timestamp - b.timestamp);
             });
@@ -52,7 +54,9 @@ router.get('/api/comments/:id',function(req,res){
       Comment.findOne({_id:commentID})
         .exec(function(err,comm){
           commentsArr.comments.push(comm);
-          if(commentsArr.comments.length === art.comments.length){
+          if(commentsArr.comments.length === art.comments.length){   
+            var i = commentsArr.comments.length;
+            while( i-- ) if(commentsArr.comments[i] === null ) commentsArr.comments.splice(i,1);
             commentsArr.comments.sort(function(a,b) {
               return(a.timestamp - b.timestamp);
             });

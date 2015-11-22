@@ -22,8 +22,18 @@ angular.module('newstalk')
 		dataService.upvote(id);
 	};
 	
+	
 	$scope.deleteComment = function(commentId,articleId){
 		dataService.deleteComment(commentId,articleId);
+		$scope.articles.articles.forEach(function(article){
+			if(article._id === articleId){
+				article.fetchedComments.forEach(function(comment){
+					if(comment._id === commentId)
+						article.fetchedComments.splice(article.fetchedComments.indexOf(comment,1));
+				});
+			}
+		});
+		
 	};
 
 	var upvoteIncrementer = function(id,userid){
