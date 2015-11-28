@@ -45,28 +45,6 @@ router.get('/api/article/comments/:id',function(req,res){
   });
 });
 
-//Request to get a comments on an comment JSON by its ID
-router.get('/api/comments/:id',function(req,res){
-  var commentsArr = {comments : []};
-  Comment.findOne({_id:req.params.id})
-  .exec(function(err,art){
-    art.comments.forEach(function(commentID){
-      Comment.findOne({_id:commentID})
-        .exec(function(err,comm){
-          commentsArr.comments.push(comm);
-          if(commentsArr.comments.length === art.comments.length){   
-            var i = commentsArr.comments.length;
-            while( i-- ) if(commentsArr.comments[i] === null ) commentsArr.comments.splice(i,1);
-            commentsArr.comments.sort(function(a,b) {
-              return(a.timestamp - b.timestamp);
-            });
-            res.json(commentsArr);
-          }
-      });
-    });
-  });
-});
-
 //Comment Addition
 router.post('/api/article/:id',function(req,res){
   var newComment = new Comment();
@@ -94,17 +72,18 @@ router.post('/api/article/:id',function(req,res){
 router.delete('/api/delete/comment/:commentId/:articleId',function(req,res){
   console.log(req.user.id);
   if(req.user)
-  Comment.findByIdAndRemove(req.params.commentId, function(err,offer){
+  console.log("In comment delete");
+  Comment.findByIdAndRemove(req.params.commentId, function(err,comment){
     if(err) console.log(err);
-    else console.log(offer);
+    else console.log(comment);
   });
-  User.findByIdAndUpdate(req.user.id,{$pull:{comments:mongoose.Schema.ObjectId(req.params.commentId)}},null,function(err,numAffected){
+  User.findById(req.user.id,function(err,numAffected){
     console.log(err,numAffected);
   });
-  Article.findByIdAndUpdate(req.params.articleId,{$pull:{comments:mongoose.Schema.ObjectId(req.params.commentId)}},null,function(err,numAffected){
+  Article.findById(req.params.articleId,function(err,numAffected){
     console.log(err,numAffected);
   });
-  console.log('removed',req.params.id);
+  console.log('removed',req.params.commentsId);
 });
 
 //Comment upvote
@@ -118,12 +97,22 @@ router.post('/api/comment/up/:id',function(req,res){
 
 
 //Comment downvote
-router.post('/api/article/down/:id',function(req,res){
+router.post('/api/comment/down/:id',function(req,res){
   Comment.findByIdAndUpdate(req.params.id, {$pull:{"votes.up":(req.user.id)}}, null,function(asdf){console.log(asdf);});
   Comment.findByIdAndUpdate(req.params.id, {$addToSet:{"votes.down":(req.user.id)}}, null,function(asdf){console.log(asdf);});
   User.findByIdAndUpdate(req.user.id, {$pull:{"votes.up":(req.params.id)}}, null,function(asdf){console.log(asdf);});
   User.findByIdAndUpdate(req.user.id, {$addToSet:{"votes.down":(req.params.id)}}, null,function(asdf){console.log(asdf);});
   res.send('Updated');  
+});
+
+//Add comment on comment
+router.post('/api/comment/add/:commentId',function(req,res){
+  if(req.user){
+    Comment.findByIdAndUpdate(req.params.commentId,{$addToSet:{comments:req.body.comment}},function(err,affected){
+      console.log(affected);
+    });
+  }
+  else res.send(403,{"Status":"403"});
 });
 
 module.exports = router;

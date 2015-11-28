@@ -43,10 +43,10 @@ block contains
 										p.comment-time {{comment.timestamp | timestampFilter}}
 										p {{comment.content}}
 										span.votes(style="font-size:.85em; font-color:black;")
-											span.up
+											span.up(ng-click="upvoteComment(comment._id,id,userid)" ng-class='{"up-clicked":comment.votes.up.indexOf(userid)>=0}')
 												img(src='/img/up.png', width='15px')
 												|  {{comment.votes.up.length}}
-											span.down
+											span.down(ng-click="downvoteComment(comment._id,id,userid)" ng-class='{"up-clicked":comment.votes.down.indexOf(userid)>=0}')
 												img(src='/img/down.png', width='15px')
 												|  {{comment.votes.down.length}}
 										span.editreply(ng-show="comment.user.id === userid")

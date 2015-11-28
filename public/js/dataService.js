@@ -13,7 +13,10 @@
 			downvote : downvote,
 			getComments : getComments,
 			removeFromReadingList : removeFromReadingList,
-			deleteComment : deleteComment
+			deleteComment : deleteComment,
+			upvoteComment:upvoteComment,
+			downvoteComment: downvoteComment,
+			addCommentOnComment:addCommentOnComment
 		};
 
 		function getArticles(numsRecieved){
@@ -79,10 +82,22 @@
 				url:'/api/article/up/'+id
 			});
 		}
+		function upvoteComment(id){
+			return $http({
+				method:'post',
+				url:'/api/comment/up/'+id
+			});
+		}
 		function downvote(id){
 			return $http({
 				method:'post',
 				url:'/api/article/down/'+id
+			});
+		}
+		function downvoteComment(id){
+			return $http({
+				method:'post',
+				url:'/api/comment/down/'+id
 			});
 		}
 		function getComments(id){
@@ -92,6 +107,12 @@
 			})
 			.then(sendResponseComments);
 		}
-		
+		function addCommentOnComment(id,data){
+			return $http({
+				method:'post',
+				url:'/api/comment/add/:id',
+				data:data
+			}).then(sendResponse);
+		}
 	}
-})()
+})();

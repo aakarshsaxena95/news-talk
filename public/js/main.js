@@ -36,13 +36,23 @@ app.controller("ArticleController",['$scope','$http','dataService','toastr',func
 		dataService.upvote(id);
 	};
 	
+	$scope.upvoteComment = function(commentId,articleId,userid){
+		upvoteIncrementerComment(commentId,userid);
+		dataService.upvoteComment(commentId);
+	};
+	
+	$scope.downvoteComment = function(commentId,articleId,userid){
+		downvoteIncrementerComment(commentId,userid);
+		dataService.downvoteComment(commentId);
+	};
+	
 	$scope.deleteComment = function(commentId,articleId){
 		dataService.deleteComment(commentId,articleId);
 		$scope.articles.articles.forEach(function(article){
 			if(article._id === articleId){
 				article.fetchedComments.forEach(function(comment){
 					if(comment._id === commentId)
-						article.fetchedComments.splice(article.fetchedComments.indexOf(comment,1));
+						article.fetchedComments.splice(article.fetchedComments.indexOf(comment,1),1);
 				});
 			}
 		});
@@ -56,18 +66,43 @@ app.controller("ArticleController",['$scope','$http','dataService','toastr',func
 			}
 			if(article && article._id === id && !article.votes.set){
 				if(article.votes.down.indexOf(userid)>-1){
-					article.votes.down.splice(article.votes.down.indexOf(userid));
+					article.votes.down.splice(article.votes.down.indexOf(userid),1);
 				}
 				article.votes.up.push(userid);
 				article.votes.set = true;
 			}
 		});
 	};	
-
+	
+	var upvoteIncrementerComment = function(commentId,articleId,userid){
+		$scope.articles.articles.forEach(function(article){
+			if(article._id === articleId){
+				article.fetchedComments.forEach(function(comment){
+					if(comment._id === commentId && comment.votes.up.indexOf(userid)<0)
+						comment.votes.down.splice(comment.votes.down.indexOf(userid),1);
+						comment.votes.up.push(userid);
+				});
+			}
+		});
+	};	
+	
+	var downvoteIncrementerComment = function(commentId,articleId,userid){
+		$scope.articles.articles.forEach(function(article){
+			if(article._id === articleId){
+				article.fetchedComments.forEach(function(comment){
+					if(comment._id === commentId && comment.votes.down.indexOf(userid)<0)
+						comment.votes.up.splice(comment.votes.up.indexOf(userid),1);
+						comment.votes.down.push(userid);
+				});
+			}
+		});
+	};	
+	
+	
 	$scope.downvote = function(id,userid){
 		downvoteIncrementer(id,userid);
 		dataService.downvote(id);
-	}
+	};
 
 	var downvoteIncrementer = function(id,userid){
 		$scope.articles.articles.forEach(function(article){
